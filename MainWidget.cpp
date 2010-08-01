@@ -206,9 +206,10 @@ void MainWidget::paintEvent(QPaintEvent *event) {
             }
         }
     }
-    if (hasFocus()) {
+    QRect lastRect = pixelRect(lastx, lasty).adjusted(0,0,-1,-1);
+    if (!event->region().intersect(lastRect).isEmpty() && hasFocus()) {
         painter.setPen(selColor);
-        painter.drawRect(pixelRect(lastx,lasty).adjusted(0,0,-1,-1));
+        painter.drawRect(lastRect);
     }
 }
 
