@@ -7,6 +7,10 @@
 #include <QList>
 #include <QChar>
 
+// Brushes
+#include "Brush.h"
+#include "Brush_Pen.h"
+
 /* *TODO:
    * Some way of loading files/changing background/foreground images (and initiating a redraw)
    */
@@ -24,8 +28,13 @@ class MainWidget : public QWidget {
     Q_PROPERTY(int xasc READ ascWidth)
     Q_PROPERTY(int yasc READ ascHeight)
 
+    // Brushes
+    friend class Brush;
+    friend class Brush_Pen;
+
 public:
     explicit MainWidget(QWidget *parent = 0);
+    ~MainWidget();
 
     void setBGColor(const QColor &newColor) { bgColor = newColor; }
     void setFGColor(const QColor &newColor) { fgColor = newColor; }
@@ -61,6 +70,8 @@ protected:
 private:
     void setBGImagePixel(const QPoint &pos);
     void setFGImagePixel(const QPoint &pos);
+    void setBGImagePixel(int x, int y);
+    void setFGImagePixel(int x, int y);
     QRect pixelRect(int i, int j) const;
 
     QColor bgColor, fgColor, selColor;
@@ -70,6 +81,8 @@ private:
     QList<QList<QChar> > text; // the ascii text
     bool showGrid; // whether to display 1-pixel black grid between rects
     int lastx, lasty; // last ascii cell selected
+    QList<Brush*> brushes;
+    QList<Brush*>::iterator current_brush;
 };
 
 #endif // MAINWIDGET_H

@@ -18,10 +18,13 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     lastx = 0;
     lasty = 0;
 
-    background = QImage(xasc, yasc, QImage::Format_ARGB32);
-    background.fill(qRgba(255, 255, 255, 255));
-    foreground = QImage(xasc, yasc, QImage::Format_ARGB32);
-    foreground.fill(qRgba(0, 0, 0, 255));
+    brushes << new Brush_Pen(this);
+    current_brush = brushes.begin();
+
+    background = QImage(xasc, yasc, QImage::Format_RGB32);
+    background.fill(qRgb(255, 255, 255));
+    foreground = QImage(xasc, yasc, QImage::Format_RGB32);
+    foreground.fill(qRgb(0, 0, 0));
     QList<QChar> l;
     for (int i = 0; i < xasc; ++i) {
         l << QChar(' ');
@@ -29,6 +32,11 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     for (int i = 0; i < yasc; ++i) {
         text << l;
     }
+}
+
+MainWidget::~MainWidget() {
+    foreach(Brush* b, brushes)
+        delete b;
 }
 
 void MainWidget::setGrid(bool g) {
@@ -80,10 +88,8 @@ void MainWidget::mousePressEvent(QMouseEvent *event) {
     lastx = i;
     lasty = j;
     update(pixelRect(oldx,oldy));
-    if (event->button() == Qt::LeftButton) {
-        setBGImagePixel(event->pos());
-    } else if (event->button() == Qt::RightButton) {
-        setFGImagePixel(event->pos());
+    if (event->button() == Qt::LeftButton || event->button() == Qt::RightButton) {
+        (*current_brush)->onMouseClick(event, i, j);
     } else {
         QWidget::mousePressEvent(event);
     }
@@ -101,10 +107,8 @@ void MainWidget::mouseMoveEvent(QMouseEvent *event) {
     lastx = i;
     lasty = j;
     update(pixelRect(oldx,oldy));
-    if (event->buttons() & Qt::LeftButton) {
-        setBGImagePixel(event->pos());
-    } else if (event->buttons() & Qt::RightButton) {
-        setFGImagePixel(event->pos());
+    if (event->buttons() & Qt::LeftButton || event->buttons() & Qt::RightButton) {
+        (*current_brush)->onMouseMove(event, i, j);
     } else {
         QWidget::mouseMoveEvent(event);
     }
@@ -120,6 +124,7 @@ void MainWidget::mouseReleaseEvent(QMouseEvent *event) {
     lastx = i;
     lasty = j;
     update(pixelRect(i,j));
+    (*current_brush)->onMouseRelease(event, i, j);
 }
 
 void MainWidget::keyPressEvent(QKeyEvent *event) {
@@ -200,8 +205,8 @@ void MainWidget::paintEvent(QPaintEvent *event) {
         for (int j = 0; j < yasc; ++j) {
             QRect rect = pixelRect(i, j);
             if (!event->region().intersect(rect).isEmpty()) {
-                painter.fillRect(rect, QColor::fromRgba(background.pixel(i, j)));
-                painter.setPen(QColor::fromRgba(foreground.pixel(i,j)));
+                painter.fillRect(rect, QColor::fromRgb(background.pixel(i, j)));
+                painter.setPen(QColor::fromRgb(foreground.pixel(i,j)));
                 painter.drawText(rect.translated(1,0), Qt::AlignCenter, text.at(j).at(i));
             }
         }
@@ -211,6 +216,7 @@ void MainWidget::paintEvent(QPaintEvent *event) {
         painter.setPen(selColor);
         painter.drawRect(lastRect);
     }
+    (*current_brush)->onWidgetPaint(event);
 }
 
 void MainWidget::setBGImagePixel(const QPoint &pos) {
@@ -218,7 +224,7 @@ void MainWidget::setBGImagePixel(const QPoint &pos) {
     int j = pos.y() / ysize;
 
     if (background.rect().contains(i, j)) {
-        background.setPixel(i, j, bgColor.rgba());
+        background.setPixel(i, j, bgColor.rgb());
         update(pixelRect(i, j));
     }
 }
@@ -228,8 +234,22 @@ void MainWidget::setFGImagePixel(const QPoint &pos) {
     int j = pos.y() / ysize;
 
     if (foreground.rect().contains(i, j)) {
-        foreground.setPixel(i, j, fgColor.rgba());
+        foreground.setPixel(i, j, fgColor.rgb());
         update(pixelRect(i, j));
+    }
+}
+
+void MainWidget::setBGImagePixel(int x, int y) {
+    if (background.rect().contains(x, y)) {
+        background.setPixel(x, y, bgColor.rgb());
+        update(pixelRect(x, y));
+    }
+}
+
+void MainWidget::setFGImagePixel(int x, int y) {
+    if (foreground.rect().contains(x, y)) {
+        foreground.setPixel(x, y, fgColor.rgb());
+        update(pixelRect(x, y));
     }
 }
 
@@ -263,16 +283,16 @@ void MainWidget::addRows(int place, int n) {
     QList<QRgb> bgRow, fgRow;
     for (int i = 0; i < xasc; ++i) {
         textl << QChar(' ');
-        bgRow << bgColor.rgba();
-        fgRow << fgColor.rgba();
+        bgRow << bgColor.rgb();
+        fgRow << fgColor.rgb();
     }
     for (int i = 0; i < n; ++i) {
         text.insert(place, textl);
         bg.insert(place, bgRow);
         fg.insert(place, fgRow);
     }
-    QImage newbg(xasc, yasc+n, QImage::Format_ARGB32);
-    QImage newfg(xasc, yasc+n, QImage::Format_ARGB32);
+    QImage newbg(xasc, yasc+n, QImage::Format_RGB32);
+    QImage newfg(xasc, yasc+n, QImage::Format_RGB32);
     for (int j = 0; j < yasc+n; ++j) {
         for (int i = 0; i < xasc; ++i) {
             newbg.setPixel(i, j, bg[j][i]);
@@ -311,8 +331,8 @@ void MainWidget::delRows(int place, int n) {
         bg.removeAt(place);
         fg.removeAt(place);
     }
-    QImage newbg(xasc, yasc-n, QImage::Format_ARGB32);
-    QImage newfg(xasc, yasc-n, QImage::Format_ARGB32);
+    QImage newbg(xasc, yasc-n, QImage::Format_RGB32);
+    QImage newfg(xasc, yasc-n, QImage::Format_RGB32);
     for (int j = 0; j < yasc-n; ++j) {
         for (int i = 0; i < xasc; ++i) {
             newbg.setPixel(i, j, bg[j][i]);
@@ -347,12 +367,12 @@ void MainWidget::addColumns(int place, int n) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < yasc; ++j) {
             text[j].insert(place, QChar(' '));
-            bg[j].insert(place, bgColor.rgba());
-            fg[j].insert(place, fgColor.rgba());
+            bg[j].insert(place, bgColor.rgb());
+            fg[j].insert(place, fgColor.rgb());
         }
     }
-    QImage newbg(xasc+n, yasc, QImage::Format_ARGB32);
-    QImage newfg(xasc+n, yasc, QImage::Format_ARGB32);
+    QImage newbg(xasc+n, yasc, QImage::Format_RGB32);
+    QImage newfg(xasc+n, yasc, QImage::Format_RGB32);
     for (int j = 0; j < yasc; ++j) {
         for (int i = 0; i < xasc+n; ++i) {
             newbg.setPixel(i, j, bg[j][i]);
@@ -393,8 +413,8 @@ void MainWidget::delColumns(int place, int n) {
             fg[j].removeAt(place);
         }
     }
-    QImage newbg(xasc-n, yasc, QImage::Format_ARGB32);
-    QImage newfg(xasc-n, yasc, QImage::Format_ARGB32);
+    QImage newbg(xasc-n, yasc, QImage::Format_RGB32);
+    QImage newfg(xasc-n, yasc, QImage::Format_RGB32);
     for (int j = 0; j < yasc; ++j) {
         for (int i = 0; i < xasc-n; ++i) {
             newbg.setPixel(i, j, bg[j][i]);
