@@ -18,7 +18,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     lastx = 0;
     lasty = 0;
 
-    brushes << std::make_pair(BrushT_Pen, new Brush_Pen(this));
+    //brushes << std::make_pair(BrushT_Pen, new Brush_Pen(this));
+    brushes << std::make_pair(BrushT_Line, new Brush_Line(this));
     current_brush = brushes.begin();
 
     background = QImage(xasc, yasc, QImage::Format_RGB32);
