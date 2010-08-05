@@ -1,17 +1,17 @@
 #include "Brush.h"
 
-void Brush::onWidgetPaint(QPaintEvent *) {
+void Brush::onWidgetPaint(QPaintEvent *, QPainter&) {
     return;
 }
 
-void Brush::onMouseClick(QMouseEvent *, int , int) {
+void Brush::onMouseClick(QMouseEvent *, int , int, bool) {
     return;
 }
 
-void Brush::onMouseRelease(QMouseEvent *, int , int) {
+void Brush::onMouseRelease(QMouseEvent *, int , int, bool) {
     return;
 }
 
-void Brush::onMouseMove(QMouseEvent *, int , int) {
+void Brush::onMouseMove(QMouseEvent *, int , int, bool) {
     return;
 }

@@ -1,6 +1,9 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include <utility>
+#include <algorithm>
+
 #include <QWidget>
 #include <QColor>
 #include <QImage>
@@ -8,8 +11,8 @@
 #include <QChar>
 
 // Brushes
-#include "Brush.h"
 #include "Brush_Pen.h"
+#include "Brush_Line.h"
 
 /* *TODO:
    * Some way of loading files/changing background/foreground images (and initiating a redraw)
@@ -29,8 +32,8 @@ class MainWidget : public QWidget {
     Q_PROPERTY(int yasc READ ascHeight)
 
     // Brushes
-    friend class Brush;
     friend class Brush_Pen;
+    friend class Brush_Line;
 
 public:
     explicit MainWidget(QWidget *parent = 0);
@@ -59,6 +62,8 @@ public:
     void delRows(int place, int n);
     void addColumns(int place, int n); // same but columns
     void delColumns(int place, int n);
+    enum BrushType { BrushT_Pen, BrushT_Line };
+    void setBrush(BrushType b);
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -66,6 +71,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void paintEvent(QPaintEvent *event);
+
 
 private:
     void setBGImagePixel(const QPoint &pos);
@@ -81,8 +87,8 @@ private:
     QList<QList<QChar> > text; // the ascii text
     bool showGrid; // whether to display 1-pixel black grid between rects
     int lastx, lasty; // last ascii cell selected
-    QList<Brush*> brushes;
-    QList<Brush*>::iterator current_brush;
+    QList<std::pair<BrushType, Brush*> > brushes;
+    QList<std::pair<BrushType, Brush*> >::iterator current_brush;
 };
 
 #endif // MAINWIDGET_H

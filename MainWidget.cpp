@@ -18,7 +18,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     lastx = 0;
     lasty = 0;
 
-    brushes << new Brush_Pen(this);
+    brushes << std::make_pair(BrushT_Pen, new Brush_Pen(this));
     current_brush = brushes.begin();
 
     background = QImage(xasc, yasc, QImage::Format_RGB32);
@@ -35,8 +35,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
 }
 
 MainWidget::~MainWidget() {
-    foreach(Brush* b, brushes)
-        delete b;
+    typedef std::pair<BrushType, Brush*> brushPair;
+    foreach(brushPair p, brushes)
+        delete p.second;
 }
 
 void MainWidget::setGrid(bool g) {
@@ -80,7 +81,7 @@ void MainWidget::mousePressEvent(QMouseEvent *event) {
     int i = event->pos().x() / xsize;
     int j = event->pos().y() / ysize;
     if (j >= yasc || j < 0 || i >= xasc || i < 0) {
-        QWidget::mousePressEvent(event);
+        current_brush->second->onMouseClick(event, i, j, false);
         return;
     }
     int oldx = lastx;
@@ -89,7 +90,7 @@ void MainWidget::mousePressEvent(QMouseEvent *event) {
     lasty = j;
     update(pixelRect(oldx,oldy));
     if (event->button() == Qt::LeftButton || event->button() == Qt::RightButton) {
-        (*current_brush)->onMouseClick(event, i, j);
+        current_brush->second->onMouseClick(event, i, j, true);
     } else {
         QWidget::mousePressEvent(event);
     }
@@ -99,7 +100,7 @@ void MainWidget::mouseMoveEvent(QMouseEvent *event) {
     int i = event->pos().x() / xsize;
     int j = event->pos().y() / ysize;
     if (j >= yasc || j < 0 || i >= xasc || i < 0) {
-        QWidget::mouseMoveEvent(event);
+        current_brush->second->onMouseMove(event, i, j, false);
         return;
     }
     int oldx = lastx;
@@ -108,7 +109,7 @@ void MainWidget::mouseMoveEvent(QMouseEvent *event) {
     lasty = j;
     update(pixelRect(oldx,oldy));
     if (event->buttons() & Qt::LeftButton || event->buttons() & Qt::RightButton) {
-        (*current_brush)->onMouseMove(event, i, j);
+        current_brush->second->onMouseMove(event, i, j, true);
     } else {
         QWidget::mouseMoveEvent(event);
     }
@@ -118,13 +119,13 @@ void MainWidget::mouseReleaseEvent(QMouseEvent *event) {
     int i = event->pos().x() / xsize;
     int j = event->pos().y() / ysize;
     if (j >= yasc || j < 0 || i >= xasc || i < 0) {
-        QWidget::mouseReleaseEvent(event);
+        current_brush->second->onMouseRelease(event, i, j, false);
         return;
     }
     lastx = i;
     lasty = j;
     update(pixelRect(i,j));
-    (*current_brush)->onMouseRelease(event, i, j);
+    current_brush->second->onMouseRelease(event, i, j, true);
 }
 
 void MainWidget::keyPressEvent(QKeyEvent *event) {
@@ -216,7 +217,7 @@ void MainWidget::paintEvent(QPaintEvent *event) {
         painter.setPen(selColor);
         painter.drawRect(lastRect);
     }
-    (*current_brush)->onWidgetPaint(event);
+    current_brush->second->onWidgetPaint(event, painter);
 }
 
 void MainWidget::setBGImagePixel(const QPoint &pos) {
@@ -426,4 +427,14 @@ void MainWidget::delColumns(int place, int n) {
     xasc -= n;
     update();
     updateGeometry();
+}
+
+void MainWidget::setBrush(BrushType b) {
+    typedef std::pair<BrushType, Brush*> brushPair;
+    foreach (brushPair p, brushes) {
+        if (p.first == b) {
+            current_brush = std::find(brushes.begin(), brushes.end(), p);
+            return;
+        }
+    }
 }
