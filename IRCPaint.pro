@@ -15,10 +15,12 @@ SOURCES += main.cpp\
     MainWidget.cpp \
     Brush.cpp \
     Brush_Pen.cpp \
-    Brush_Line.cpp
+    Brush_Line.cpp \
+    Brush_Rect.cpp
 
 HEADERS  += IRCPaintMainWindow.h \
     MainWidget.h \
     Brush.h \
     Brush_Pen.h \
-    Brush_Line.h
+    Brush_Line.h \
+    Brush_Rect.h

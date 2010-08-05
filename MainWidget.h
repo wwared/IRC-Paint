@@ -13,6 +13,7 @@
 // Brushes
 #include "Brush_Pen.h"
 #include "Brush_Line.h"
+#include "Brush_Rect.h"
 
 /* *TODO:
    * Some way of loading files/changing background/foreground images (and initiating a redraw)
@@ -34,6 +35,7 @@ class MainWidget : public QWidget {
     // Brushes
     friend class Brush_Pen;
     friend class Brush_Line;
+    friend class Brush_Rect;
 
 public:
     explicit MainWidget(QWidget *parent = 0);
@@ -62,7 +64,7 @@ public:
     void delRows(int place, int n);
     void addColumns(int place, int n); // same but columns
     void delColumns(int place, int n);
-    enum BrushType { BrushT_Pen, BrushT_Line };
+    enum BrushType { BrushT_Pen, BrushT_Line, BrushT_Rect };
     void setBrush(BrushType b);
 
 protected:
