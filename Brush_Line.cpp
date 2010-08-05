@@ -30,9 +30,9 @@ void Brush_Line::onMouseMove(QMouseEvent *event, int , int , bool insideWidget) 
 }
 
 void Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWidget) {
-    end = event->pos();
     drawPreview = false;
     if (insideWidget) {
+        end = event->pos();
         xend = x;
         yend = y;
         QPainter p;
