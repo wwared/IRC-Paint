@@ -9,6 +9,7 @@
 #include <QImage>
 #include <QList>
 #include <QChar>
+#include <QMap>
 
 // Brushes
 #include "Brush_Pen.h"
@@ -38,7 +39,7 @@ class MainWidget : public QWidget {
     friend class Brush_Rect;
 
 public:
-    explicit MainWidget(QWidget *parent = 0);
+    explicit MainWidget(QWidget *parent, QMap<int, QRgb>* colors);
     ~MainWidget();
 
     void setBGColor(const QColor &newColor) { bgColor = newColor; }
@@ -83,6 +84,7 @@ private:
     void setFGImagePixel(int x, int y);
     QRect pixelRect(int i, int j) const;
 
+    QMap<int, QRgb>* colors;
     QColor bgColor, fgColor, selColor;
     QImage background, foreground;
     int xasc, yasc; // ascii size
