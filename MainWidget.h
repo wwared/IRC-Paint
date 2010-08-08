@@ -53,12 +53,12 @@ public:
     int rectHeight() const { return ysize; }
     int ascWidth() const { return xasc; }
     int ascHeight() const { return yasc; }
-    bool gridShown() const { return showGrid; }
-    void setGrid(bool g);
-    void setBGImage(const QImage &newImage);
-    void setFGImage(const QImage &newImage);
-    QImage getBGImage() const { return background; }
-    QImage getFGImage() const { return foreground; }
+    bool gridShown() const { return showGrid; } // whether grid is shown
+    void setGrid(bool g); // show/hide grid
+    void setBGImage(const QImage &newImage); // replaces the background image
+    void setFGImage(const QImage &newImage); // same for foreground
+    QImage getBGImage() const { return background; } // returns a copy of the background
+    QImage getFGImage() const { return foreground; } // same for foreground
     QSize sizeHint() const;
     void addRows(int place, int n); // adds n blank rows of the current bg/fg color before the row place
     void delRows(int place, int n);
@@ -66,6 +66,7 @@ public:
     void delColumns(int place, int n);
     enum BrushType { BrushT_Pen, BrushT_Line, BrushT_Rect };
     void setBrush(BrushType b);
+    void swapColor(QRgb c1, QRgb c2);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

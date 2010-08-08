@@ -18,7 +18,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     lastx = 0;
     lasty = 0;
 
-    brushes << std::make_pair(BrushT_Pen, new Brush_Pen(this)) << std::make_pair(BrushT_Line, new Brush_Line(this)) << std::make_pair(BrushT_Rect, new Brush_Rect(this));
+    brushes << /*std::make_pair(BrushT_Pen, new Brush_Pen(this)) << std::make_pair(BrushT_Line, new Brush_Line(this)) <<*/ std::make_pair(BrushT_Rect, new Brush_Rect(this));
     current_brush = brushes.begin();
 
     background = QImage(xasc, yasc, QImage::Format_RGB32);
@@ -218,6 +218,20 @@ void MainWidget::paintEvent(QPaintEvent *event) {
         painter.drawRect(lastRect);
     }
     current_brush->second->onWidgetPaint(event, painter);
+}
+
+void MainWidget::swapColor(QRgb c1, QRgb c2) {
+    for (int y = 0; y < yasc; ++y) {
+        for (int x = 0; x < xasc; ++x) {
+            if (background.pixel(x,y) == c1) {
+                background.setPixel(x, y, c2);
+            }
+            if (foreground.pixel(x,y) == c1) {
+                foreground.setPixel(x, y, c2);
+            }
+        }
+    }
+    update();
 }
 
 void MainWidget::setBGImagePixel(const QPoint &pos) {
