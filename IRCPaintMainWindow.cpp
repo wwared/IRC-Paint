@@ -21,7 +21,7 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     setCentralWidget(mwidget);
 }
 
-bool IRCPaintMainWindow::exportToTxt(const QString& fname, const QImage& background, const QImage& foreground, const QList<QList<QChar> >& text) {
+bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
@@ -29,6 +29,9 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname, const QImage& backgro
     }
     QTextStream out(&file);
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QImage background = mwidget->getBGImage();
+    QImage foreground = mwidget->getFGImage();
+    QList<QList<QChar> > text = mwidget->getText();
     int x = 0;
     int y = 0;
     foreach(QList<QChar> l, text) {
@@ -48,7 +51,7 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname, const QImage& backgro
                 if (fgchange) {
                     out << "," << rgbToIrc(bg);
                 } else {
-                    out << "," << rgbToIrc(bg);
+                    out << "" << rgbToIrc(fg) << "," << rgbToIrc(bg);
                 }
             }
             out << c;

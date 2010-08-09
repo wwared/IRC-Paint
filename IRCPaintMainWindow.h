@@ -15,7 +15,7 @@ class IRCPaintMainWindow : public QMainWindow {
 
 public:
     explicit IRCPaintMainWindow();
-    bool exportToTxt(const QString& fname, const QImage& background, const QImage& foreground, const QList<QList<QChar> >& text);
+    bool exportToTxt(const QString& fname);
     int rgbToIrc(QRgb c);
     QRgb ircToRgb(int i);
     void swapIrcColor(int i, QRgb c);
