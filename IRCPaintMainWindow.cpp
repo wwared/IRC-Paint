@@ -35,27 +35,32 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
     int x = 0;
     int y = 0;
     foreach(QList<QChar> l, text) {
-        QRgb bg = qRgb(1,2,3);
-        QRgb fg = qRgb(1,2,3);
+        QRgb bg = qRgb(0,0,0);
+        QRgb fg = qRgb(0,0,0);
+        bool first = true;
         foreach(QChar c, l) {
-            bool fgchange = false;
             QRgb oldfg = fg;
             fg = foreground.pixel(x,y);
-            if (fg != oldfg) {
-                out << "" << rgbToIrc(fg);
-                fgchange = true;
-            }
             QRgb oldbg = bg;
             bg = background.pixel(x,y);
-            if (bg != oldbg) {
-                if (fgchange) {
-                    out << "," << rgbToIrc(bg);
+            if (bg != oldbg || first) { // background color changes, ^Cf,b (or first character in a line)
+                int b = rgbToIrc(bg);
+                if (c.isDigit() && b < 10) {
+                    out << "" << rgbToIrc(fg) << ",0" << b;
                 } else {
-                    out << "" << rgbToIrc(fg) << "," << rgbToIrc(bg);
+                    out << "" << rgbToIrc(fg) << "," << b;
+                }
+            } else if (fg != oldfg) { // only foreground color changes, ^Cf
+                int f = rgbToIrc(fg);
+                if (c.isDigit() && f < 10) {
+                    out << "0" << f;
+                } else {
+                    out << "" << f;
                 }
             }
             out << c;
             ++x;
+            first = false;
         }
         out << "\n";
         x = 0;
