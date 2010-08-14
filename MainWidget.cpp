@@ -141,7 +141,10 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
                 lasty = 0;
             }
         }
-        update(pixelRect(oldx, oldy).united(pixelRect(lastx,lasty)));
+        update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
+    } else if (event->key() == Qt::Key_Delete) {
+        text[lasty][lastx] = ' ';
+        update(pixelRect(lastx, lasty));
     } else if (event->key() == Qt::Key_Backspace) {
         int oldx = lastx;
         int oldy = lasty;
@@ -152,7 +155,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
             }
         }
         text[lasty][lastx] = ' ';
-        update(pixelRect(oldx, oldy).united(pixelRect(lastx,lasty)));
+        update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         int oldx = lastx;
         int oldy = lasty;
@@ -160,31 +163,31 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
         if (++lasty >= yasc) {
             lasty = 0;
         }
-        update(pixelRect(oldx, oldy).united(pixelRect(lastx,lasty)));
+        update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Up) {
         int oldy = lasty;
         if (--lasty < 0) {
             lasty = oldy;
         }
-        update(pixelRect(lastx, oldy).united(pixelRect(lastx,lasty)));
+        update(pixelRect(lastx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Down) {
         int oldy = lasty;
         if (++lasty >= yasc) {
             lasty = oldy;
         }
-        update(pixelRect(lastx, oldy).united(pixelRect(lastx,lasty)));
+        update(pixelRect(lastx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Left) {
         int oldx = lastx;
         if (--lastx < 0) {
             lastx = oldx;
         }
-        update(pixelRect(oldx, lasty).united(pixelRect(lastx,lasty)));
+        update(pixelRect(oldx, lasty).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Right) {
         int oldx = lastx;
         if (++lastx >= xasc) {
             lastx = oldx;
         }
-        update(pixelRect(oldx, lasty).united(pixelRect(lastx,lasty)));
+        update(pixelRect(oldx, lasty).united(pixelRect(lastx, lasty)));
     } else {
         QWidget::keyPressEvent(event);
     }
