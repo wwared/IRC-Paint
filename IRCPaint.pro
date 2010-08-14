@@ -9,10 +9,8 @@ QT       += core gui
 TARGET = IRCPaint
 TEMPLATE = app
 
-ICON = IRCPaint.icns
-win32 {
-    RC_FILE = IRCPaint.rc
-}
+macx:ICON = IRCPaint.icns
+win32:RC_FILE = IRCPaint.rc
 
 SOURCES += main.cpp\
         IRCPaintMainWindow.cpp \
