@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="icon.jpg">IRCPaint.jpg</file>
+    </qresource>
+</RCC>

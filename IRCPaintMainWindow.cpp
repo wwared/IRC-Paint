@@ -19,6 +19,7 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     colors[15] = qRgb(210,210,210);
     mwidget =  new MainWidget(this, &colors);
     setCentralWidget(mwidget);
+    QApplication::setWindowIcon(QIcon(":/icon.jpg"));
 }
 
 bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
