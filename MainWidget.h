@@ -72,6 +72,8 @@ public:
     void setBrush(BrushType b);
     void swapColor(QRgb c1, QRgb c2);
 
+    const QChar transparentCh;
+
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

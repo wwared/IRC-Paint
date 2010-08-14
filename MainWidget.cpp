@@ -2,7 +2,7 @@
 
 #include "MainWidget.h"
 
-MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : QWidget(parent) {
+MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : transparentCh('Ἆ'), QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     setFocusPolicy(Qt::StrongFocus);
@@ -28,7 +28,7 @@ MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : QWidget(paren
     foreground.fill(qRgb(0, 0, 0));
     QList<QChar> l;
     for (int i = 0; i < xasc; ++i) {
-        l << QChar(' ');
+        l << transparentCh;
     }
     for (int i = 0; i < yasc; ++i) {
         text << l;
@@ -143,7 +143,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
         }
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Delete) {
-        text[lasty][lastx] = ' ';
+        text[lasty][lastx] = transparentCh;
         update(pixelRect(lastx, lasty));
     } else if (event->key() == Qt::Key_Backspace) {
         int oldx = lastx;
@@ -154,7 +154,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
                 lasty = yasc-1;
             }
         }
-        text[lasty][lastx] = ' ';
+        text[lasty][lastx] = transparentCh;
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         int oldx = lastx;
@@ -212,7 +212,10 @@ void MainWidget::paintEvent(QPaintEvent *event) {
             if (!event->region().intersect(rect).isEmpty()) {
                 painter.fillRect(rect, QColor::fromRgb(background.pixel(i, j)));
                 painter.setPen(QColor::fromRgb(foreground.pixel(i,j)));
-                painter.drawText(rect.translated(1,0), Qt::AlignCenter, text.at(j).at(i));
+                QChar c = text.at(j).at(i);
+                if (c == transparentCh)
+                    c = ' ';
+                painter.drawText(rect.translated(1,0), Qt::AlignCenter, c);
             }
         }
     }
@@ -301,7 +304,7 @@ void MainWidget::addRows(int place, int n) {
     QList<QChar> textl;
     QList<QRgb> bgRow, fgRow;
     for (int i = 0; i < xasc; ++i) {
-        textl << QChar(' ');
+        textl << transparentCh;
         bgRow << bgColor.rgb();
         fgRow << fgColor.rgb();
     }
@@ -385,7 +388,7 @@ void MainWidget::addColumns(int place, int n) {
     }
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < yasc; ++j) {
-            text[j].insert(place, QChar(' '));
+            text[j].insert(place, transparentCh);
             bg[j].insert(place, bgColor.rgb());
             fg[j].insert(place, fgColor.rgb());
         }

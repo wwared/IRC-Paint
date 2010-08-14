@@ -39,6 +39,8 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
         QRgb fg = qRgb(0,0,0);
         bool first = true;
         foreach(QChar c, l) {
+            if (c == mwidget->transparentCh)
+                c = ' ';
             QRgb oldfg = fg;
             fg = foreground.pixel(x,y);
             QRgb oldbg = bg;
