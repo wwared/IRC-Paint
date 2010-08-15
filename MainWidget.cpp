@@ -50,8 +50,7 @@ void MainWidget::setGrid(bool g) {
 }
 
 void MainWidget::setRectWidth(int x) {
-    if (x < 1)
-        x = 1;
+    x = qMax(x, 1);
 
     if (x != xsize) {
         xsize = x;
@@ -61,8 +60,7 @@ void MainWidget::setRectWidth(int x) {
 }
 
 void MainWidget::setRectHeight(int y) {
-    if (y < 1)
-        y = 1;
+    y = qMax(y, 1);
 
     if (y != ysize) {
         ysize = y;
@@ -286,10 +284,7 @@ QRect MainWidget::pixelRect(int i, int j) const {
 void MainWidget::addRows(int place, int n) {
     if (n <= 0)
         return;
-    if (place < 0)
-        place = 0;
-    if (place > yasc)
-        place = yasc;
+    place = qBound(0, place, yasc);
 
     QList<QList<QRgb> > bg, fg;
     for (int j = 0; j < yasc; ++j) {
@@ -331,12 +326,8 @@ void MainWidget::addRows(int place, int n) {
 void MainWidget::delRows(int place, int n) {
     if (n <= 0)
         return;
-    if (place < 0)
-        place = 0;
-    if (place > yasc)
-        place = yasc;
-    if (n > yasc)
-        n = yasc;
+    place = qBound(0, place, yasc);
+    n = qMin(n, yasc);
 
     QList<QList<QRgb> > bg, fg;
     for (int j = 0; j < yasc; ++j) {
@@ -371,10 +362,7 @@ void MainWidget::delRows(int place, int n) {
 void MainWidget::addColumns(int place, int n) {
     if (n <= 0)
         return;
-    if (place < 0)
-        place = 0;
-    if (place > xasc)
-        place = xasc;
+    place = qBound(0, place, xasc);
 
     QList<QList<QRgb> > bg, fg;
     for (int j = 0; j < yasc; ++j) {
@@ -411,12 +399,8 @@ void MainWidget::addColumns(int place, int n) {
 void MainWidget::delColumns(int place, int n) {
     if (n <= 0)
         return;
-    if (place < 0)
-        place = 0;
-    if (place > xasc)
-        place = xasc;
-    if (n > xasc)
-        n = xasc;
+    place = qBound(0, place, xasc);
+    n = qMin(n, xasc);
 
     QList<QList<QRgb> > bg, fg;
     for (int j = 0; j < yasc; ++j) {

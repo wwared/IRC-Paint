@@ -1,5 +1,11 @@
 #include "IRCPaintMainWindow.h"
 
+#include <QtGui/QApplication>
+#include <QMap>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
+
 IRCPaintMainWindow::IRCPaintMainWindow() {
     colors[0]  = qRgb(255,255,255);
     colors[1]  = qRgb(0  ,0  ,  0);

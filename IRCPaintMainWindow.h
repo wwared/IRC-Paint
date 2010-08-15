@@ -2,11 +2,6 @@
 #define IRCPAINTMAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtGui/QApplication>
-#include <QMap>
-#include <QFile>
-#include <QTextStream>
-#include <QMessageBox>
 
 #include "MainWidget.h"
 
@@ -19,6 +14,9 @@ public:
     int rgbToIrc(QRgb c);
     QRgb ircToRgb(int i);
     void swapIrcColor(int i, QRgb c);
+
+protected:
+    //void closeEvent(QCloseEvent *);
 
 private:
     QMap<int, QRgb> colors;
