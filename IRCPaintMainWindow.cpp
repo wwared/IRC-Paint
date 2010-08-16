@@ -6,6 +6,8 @@
 #include <QTextStream>
 #include <QMessageBox>
 
+#include <cmath>
+
 IRCPaintMainWindow::IRCPaintMainWindow() {
     colors[0]  = qRgb(255,255,255);
     colors[1]  = qRgb(0  ,0  ,  0);
@@ -77,6 +79,45 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
     }
     QApplication::restoreOverrideCursor();
     return true;
+}
+
+IRCPaintMainWindow::Lab IRCPaintMainWindow::rgbToLab(const QRgb &c) {
+    double r = double(qRed(c))   / 255.0;
+    double g = double(qGreen(c)) / 255.0;
+    double b = double(qBlue(c))  / 255.0;
+
+#define CONVENIENCE(x) if (x > 0.04045) { \
+        x = std::pow(((x+0.055)/1.055), 2.4); \
+    } else { \
+        x /= 12.92; \
+    }
+    CONVENIENCE(r)
+    CONVENIENCE(g)
+    CONVENIENCE(b)
+#undef CONVENIENCE
+    r *= 100.0;
+    g *= 100.0;
+    b *= 100.0;
+
+    double x = ((r * 0.4124) + (g * 0.3576) + (b * 0.1805)) / 95.047;
+    double y = ((r * 0.2126) + (g * 0.7152) + (b * 0.0722)) / 100.0;
+    double z = ((r * 0.0193) + (g * 0.1192) + (b * 0.9505)) / 108.883;
+
+#define CONVENIENCE(x) if (x > 0.008856) { \
+        x = std::pow(x, 1.0/3.0); \
+    } else { \
+        x = (7.787 * x) + (16.0 / 116.0); \
+    }
+    CONVENIENCE(x)
+    CONVENIENCE(y)
+    CONVENIENCE(z)
+#undef CONVENIENCE
+
+    Lab lab;
+    lab.l = (116.0 * y) - 16.0;
+    lab.a = 500.0 * (x - y);
+    lab.b = 200.0 * (y - z);
+    return lab;
 }
 
 int IRCPaintMainWindow::rgbToIrc(QRgb c) {

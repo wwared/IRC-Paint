@@ -19,6 +19,11 @@ protected:
     //void closeEvent(QCloseEvent *);
 
 private:
+    struct Lab {
+        double l, a, b;
+    };
+    Lab rgbToLab(const QRgb& c);
+
     QMap<int, QRgb> colors;
     MainWidget* mwidget;
 };
