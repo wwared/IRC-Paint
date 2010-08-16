@@ -11,6 +11,7 @@ class IRCPaintMainWindow : public QMainWindow {
 public:
     explicit IRCPaintMainWindow();
     bool exportToTxt(const QString& fname);
+    bool importFromTxt(const QString& fname);
     int rgbToIrc(QRgb c);
     QRgb ircToRgb(int i);
     void swapIrcColor(int i, QRgb c);
@@ -19,10 +20,7 @@ protected:
     //void closeEvent(QCloseEvent *);
 
 private:
-    struct Lab {
-        double l, a, b;
-    };
-    Lab rgbToLab(const QRgb& c);
+    QRgb closestColor(const QRgb& c);
 
     QMap<int, QRgb> colors;
     MainWidget* mwidget;

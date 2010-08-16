@@ -44,6 +44,7 @@ public:
     explicit MainWidget(QWidget *parent, QMap<int, QRgb>* colors);
     ~MainWidget();
 
+    void swapAscii(int w, int h, QList<QList<QChar> > t, QImage b, QImage f);
     void setBGColor(const QColor &newColor) { bgColor = newColor; }
     void setFGColor(const QColor &newColor) { fgColor = newColor; }
     void setSelColor(const QColor &newColor) { selColor = newColor; }
@@ -71,8 +72,6 @@ public:
     enum BrushType { BrushT_Pen, BrushT_Line, BrushT_Rect };
     void setBrush(BrushType b);
     void swapColor(QRgb c1, QRgb c2);
-
-    const QChar transparentCh;
 
 protected:
     void mousePressEvent(QMouseEvent *event);

@@ -2,7 +2,7 @@
 
 #include "MainWidget.h"
 
-MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : transparentCh('Ἆ'), QWidget(parent) {
+MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     setFocusPolicy(Qt::StrongFocus);
@@ -23,12 +23,12 @@ MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : transparentCh
     current_brush = brushes.begin();
 
     background = QImage(xasc, yasc, QImage::Format_RGB32);
-    background.fill(qRgb(255, 255, 255));
+    background.fill((*colors)[0]);
     foreground = QImage(xasc, yasc, QImage::Format_RGB32);
-    foreground.fill(qRgb(0, 0, 0));
+    foreground.fill((*colors)[1]);
     QList<QChar> l;
     for (int i = 0; i < xasc; ++i) {
-        l << transparentCh;
+        l << '\0';
     }
     for (int i = 0; i < yasc; ++i) {
         text << l;
@@ -141,7 +141,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
         }
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Delete) {
-        text[lasty][lastx] = transparentCh;
+        text[lasty][lastx] = '\0';
         update(pixelRect(lastx, lasty));
     } else if (event->key() == Qt::Key_Backspace) {
         int oldx = lastx;
@@ -152,7 +152,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
                 lasty = yasc-1;
             }
         }
-        text[lasty][lastx] = transparentCh;
+        text[lasty][lastx] = '\0';
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         int oldx = lastx;
@@ -211,7 +211,7 @@ void MainWidget::paintEvent(QPaintEvent *event) {
                 painter.fillRect(rect, QColor::fromRgb(background.pixel(i, j)));
                 painter.setPen(QColor::fromRgb(foreground.pixel(i,j)));
                 QChar c = text.at(j).at(i);
-                if (c == transparentCh)
+                if (c.isNull())
                     c = ' ';
                 painter.drawText(rect.translated(1,0), Qt::AlignCenter, c);
             }
@@ -273,6 +273,22 @@ void MainWidget::setFGImagePixel(int x, int y) {
     }
 }
 
+void MainWidget::swapAscii(int w, int h, QList<QList<QChar> > t, QImage b, QImage f) {
+    if (w < 0 || h < 0 || t.size() != h || b.width() != w || f.width() != w || b.height() != h || f.height() != h)
+        return;
+    foreach(QList<QChar> l, t) {
+        if (l.size() != w)
+            return;
+    }
+    xasc = w;
+    yasc = h;
+    text = t;
+    background = b;
+    foreground = f;
+    update();
+    updateGeometry();
+}
+
 QRect MainWidget::pixelRect(int i, int j) const {
     if (showGrid) {
         return QRect(xsize * i + 1, ysize * j + 1, xsize - 1, ysize - 1);
@@ -299,7 +315,7 @@ void MainWidget::addRows(int place, int n) {
     QList<QChar> textl;
     QList<QRgb> bgRow, fgRow;
     for (int i = 0; i < xasc; ++i) {
-        textl << transparentCh;
+        textl << '\0';
         bgRow << bgColor.rgb();
         fgRow << fgColor.rgb();
     }
@@ -376,7 +392,7 @@ void MainWidget::addColumns(int place, int n) {
     }
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < yasc; ++j) {
-            text[j].insert(place, transparentCh);
+            text[j].insert(place, '\0');
             bg[j].insert(place, bgColor.rgb());
             fg[j].insert(place, fgColor.rgb());
         }
