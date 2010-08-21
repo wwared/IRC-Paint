@@ -32,7 +32,7 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     setCentralWidget(mwidget);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
 
-    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\turtwig.txt");
+    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\E.txt");
 
 }
 
@@ -118,15 +118,15 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
         QList<QChar> tLine;
         for (int i = 0; i < line.length(); ++i) {
             if (line[i] == '') {                                                   // ^C
-                i = qMin(i+1, line.length()-1);
+                i = qMin(i+1, line.length());
                 if (line[i].isDigit()) {                                            // ^C#
-                    i = qMin(i+1, line.length()-1);
+                    i = qMin(i+1, line.length());
                     if (line[i].isDigit()) {                                        // ^C##
-                        i = qMin(i+1, line.length()-1);
+                        i = qMin(i+1, line.length());
                         if (line[i] == ',') {                                       // ^C##,
-                            i = qMin(i+1, line.length()-1);
+                            i = qMin(i+1, line.length());
                             if (line[i].isDigit()) {                                // ^C##,#
-                                i = qMin(i+1, line.length()-1);
+                                i = qMin(i+1, line.length());
                                 if (line[i].isDigit()) {                            // ^C##,##
                                     fgCol = ircToRgb(line.mid(i-4,2).toInt());
                                     bgCol = ircToRgb(line.mid(i-1,2).toInt());
@@ -146,9 +146,9 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
                         fgCol = ircToRgb(line.mid(i-1,2).toInt());
                         continue;
                     } else if (line[i] == ',') {                                    // ^C#,
-                        i = qMin(i+1, line.length()-1);
+                        i = qMin(i+1, line.length());
                         if (line[i].isDigit()) {                                    // ^C#,#
-                            i = qMin(i+1, line.length()-1);
+                            i = qMin(i+1, line.length());
                             if (line[i].isDigit()) {                                // ^C#,##
                                 fgCol = ircToRgb(line.mid(i-1,2).toInt());
                                 bgCol = ircToRgb(line.mid(i-3,1).toInt());
