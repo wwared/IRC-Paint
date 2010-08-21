@@ -178,7 +178,7 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
             }
         }
         while (tLine.size() < width) {
-            tLine << '\0';
+            tLine << QChar();
         }
         text << tLine;
         ++y;
@@ -226,7 +226,7 @@ bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth, bool 
     QList<QList<QChar> > t;
     QList<QChar> tmp;
     for (int i = 0; i < irc.width(); ++i)
-        tmp << '\0';
+        tmp << QChar();
     for (int i = 0; i < irc.height(); ++i)
         t << tmp;
     mwidget->swapAscii(irc.width(), irc.height(), t, irc, irc);

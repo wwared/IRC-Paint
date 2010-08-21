@@ -28,7 +28,7 @@ MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : QWidget(paren
     foreground.fill((*colors)[1]);
     QList<QChar> l;
     for (int i = 0; i < xasc; ++i) {
-        l << '\0';
+        l << QChar();
     }
     for (int i = 0; i < yasc; ++i) {
         text << l;
@@ -141,7 +141,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
         }
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Delete) {
-        text[lasty][lastx] = '\0';
+        text[lasty][lastx] = QChar();
         update(pixelRect(lastx, lasty));
     } else if (event->key() == Qt::Key_Backspace) {
         int oldx = lastx;
@@ -152,7 +152,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
                 lasty = yasc-1;
             }
         }
-        text[lasty][lastx] = '\0';
+        text[lasty][lastx] = QChar();
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
     } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         int oldx = lastx;
@@ -315,7 +315,7 @@ void MainWidget::addRows(int place, int n) {
     QList<QChar> textl;
     QList<QRgb> bgRow, fgRow;
     for (int i = 0; i < xasc; ++i) {
-        textl << '\0';
+        textl << QChar();
         bgRow << bgColor.rgb();
         fgRow << fgColor.rgb();
     }
@@ -392,7 +392,7 @@ void MainWidget::addColumns(int place, int n) {
     }
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < yasc; ++j) {
-            text[j].insert(place, '\0');
+            text[j].insert(place, QChar());
             bg[j].insert(place, bgColor.rgb());
             fg[j].insert(place, fgColor.rgb());
         }
