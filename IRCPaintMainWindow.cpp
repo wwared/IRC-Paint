@@ -7,8 +7,6 @@
 #include <QMessageBox>
 #include <QRegExp>
 
-#include <QtDebug>
-
 #include <cmath>
 
 IRCPaintMainWindow::IRCPaintMainWindow() {
@@ -32,8 +30,7 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     setCentralWidget(mwidget);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
 
-    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\WB\\colors.txt");
-
+    importFromImg("C:\\Users\\Admin\\Desktop\\fish.png", 100);
 }
 
 bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
@@ -194,7 +191,38 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
     return true;
 }
 
-QRgb IRCPaintMainWindow::closestColor(const QRgb &c) {
+bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth) {
+    QImage image(fname);
+    if (image.isNull()) {
+        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1").arg(fname));
+        return false;
+    }
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    if (image.width() > maxWidth/2) {
+        image = image.scaledToWidth(maxWidth/2, Qt::SmoothTransformation);
+    }
+    QImage irc(image.width()*2, image.height(), QImage::Format_RGB32);
+    for (int y = 0; y < image.height(); ++y) {
+        int j = 0;
+        for (int x = 0; x < image.width(); ++x) {
+            QRgb color = closestColor(image.pixel(x, y));
+            irc.setPixel(x+j, y, color);
+            ++j;
+            irc.setPixel(x+j, y, color);
+        }
+    }
+    QList<QList<QChar> > t;
+    QList<QChar> tmp;
+    for (int i = 0; i < irc.width(); ++i)
+        tmp << '\0';
+    for (int i = 0; i < irc.height(); ++i)
+        t << tmp;
+    mwidget->swapAscii(irc.width(), irc.height(), t, irc, irc);
+    QApplication::restoreOverrideCursor();
+    return true;
+}
+
+QRgb IRCPaintMainWindow::closestColor(const QRgb& c) {
     double shortestDistance;
     int index;
     for (int i = 0; i < 16; ++i) {

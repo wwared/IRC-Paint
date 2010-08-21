@@ -12,6 +12,7 @@ public:
     explicit IRCPaintMainWindow();
     bool exportToTxt(const QString& fname);
     bool importFromTxt(const QString& fname);
+    bool importFromImg(const QString& fname, int maxWidth); // maxWidth is the maximum number of ascii cells
     int rgbToIrc(QRgb c);
     QRgb ircToRgb(int i);
     void swapIrcColor(int i, QRgb c);
