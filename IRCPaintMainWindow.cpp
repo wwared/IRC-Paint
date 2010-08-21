@@ -29,8 +29,6 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     mwidget =  new MainWidget(this, &colors);
     setCentralWidget(mwidget);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
-
-    importFromImg("C:\\Users\\Admin\\Desktop\\fish.png", 100);
 }
 
 bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
