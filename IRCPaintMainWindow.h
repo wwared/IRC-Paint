@@ -12,7 +12,7 @@ public:
     explicit IRCPaintMainWindow();
     bool exportToTxt(const QString& fname);
     bool importFromTxt(const QString& fname);
-    bool importFromImg(const QString& fname, int maxWidth); // maxWidth is the maximum number of ascii cells
+    bool importFromImg(const QString& fname, int maxWidth, bool smooth); // maxWidth is the maximum number of ascii cells; if smooth is true, use bilinear interpolation while scaling down
     int rgbToIrc(QRgb c);
     QRgb ircToRgb(int i);
     void swapIrcColor(int i, QRgb c);
@@ -21,7 +21,11 @@ protected:
     //void closeEvent(QCloseEvent *);
 
 private:
-    QRgb closestColor(const QRgb& c);
+    struct Lab {
+        double l, a, b;
+    };
+    Lab rgbToLab(const QRgb& c);
+    QRgb closestColor(const QRgb& c, const QMap<int, Lab>& labColors);
 
     QMap<int, QRgb> colors;
     MainWidget* mwidget;

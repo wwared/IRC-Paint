@@ -189,21 +189,35 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
     return true;
 }
 
-bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth) {
+bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) {
     QImage image(fname);
     if (image.isNull()) {
         QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1").arg(fname));
         return false;
     }
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QMap<int, Lab> labColors;
+    for (int i = 0; i < 16; ++i)
+        labColors[i] = rgbToLab(colors[i]);
     if (image.width() > maxWidth/2) {
-        image = image.scaledToWidth(maxWidth/2, Qt::SmoothTransformation);
+        if (smooth) {
+            image = image.scaledToWidth(maxWidth/2, Qt::SmoothTransformation);
+        } else {
+            image = image.scaledToWidth(maxWidth/2, Qt::FastTransformation);
+        }
     }
     QImage irc(image.width()*2, image.height(), QImage::Format_RGB32);
+    QImage fg = irc;
+    fg.fill(colors[1]);
     for (int y = 0; y < image.height(); ++y) {
         int j = 0;
         for (int x = 0; x < image.width(); ++x) {
-            QRgb color = closestColor(image.pixel(x, y));
+            QRgb color;
+            if (qAlpha(image.pixel(x,y)) != 255) {
+                color = colors[0];
+            } else {
+                color = closestColor(image.pixel(x, y), labColors);
+            }
             irc.setPixel(x+j, y, color);
             ++j;
             irc.setPixel(x+j, y, color);
@@ -220,21 +234,57 @@ bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth) {
     return true;
 }
 
-QRgb IRCPaintMainWindow::closestColor(const QRgb& c) {
+QRgb IRCPaintMainWindow::closestColor(const QRgb& c, const QMap<int, Lab>& labColors) {
     double shortestDistance;
     int index;
+    Lab col = rgbToLab(c);
     for (int i = 0; i < 16; ++i) {
-        long rmean = ((long)qRed(colors[i]) - (long)qRed(c)) / 2L;
-        long r = (long)qRed(colors[i])   - (long)qRed(c);
-        long g = (long)qGreen(colors[i]) - (long)qGreen(c);
-        long b = (long)qBlue(colors[i])  - (long)qBlue(c);
-        double distance = std::sqrt((double)((((512+rmean)*r*r)>>8) + 4*g*g + (((767-rmean)*b*b)>>8)));
+        double distance = std::sqrt(std::pow(col.l - labColors[i].l, 2) + std::pow(col.a - labColors[i].a, 2) + std::pow(col.b - labColors[i].b, 2));
         if (i == 0 || distance < shortestDistance) {
             shortestDistance = distance;
             index = i;
         }
     }
     return colors[index];
+}
+
+IRCPaintMainWindow::Lab IRCPaintMainWindow::rgbToLab(const QRgb &c) {
+    double r = double(qRed(c))   / 255.0;
+    double g = double(qGreen(c)) / 255.0;
+    double b = double(qBlue(c))  / 255.0;
+
+#define CONVENIENCE(x) if (x > 0.04045) { \
+        x = std::pow(((x+0.055)/1.055), 2.4); \
+    } else { \
+        x /= 12.92; \
+    }
+    CONVENIENCE(r)
+    CONVENIENCE(g)
+    CONVENIENCE(b)
+#undef CONVENIENCE
+    r *= 100.0;
+    g *= 100.0;
+    b *= 100.0;
+
+    double x = ((r * 0.4124) + (g * 0.3576) + (b * 0.1805)) / 95.047;
+    double y = ((r * 0.2126) + (g * 0.7152) + (b * 0.0722)) / 100.0;
+    double z = ((r * 0.0193) + (g * 0.1192) + (b * 0.9505)) / 108.883;
+
+#define CONVENIENCE(x) if (x > 0.008856) { \
+        x = std::pow(x, 1.0/3.0); \
+    } else { \
+        x = (7.787 * x) + (16.0 / 116.0); \
+    }
+    CONVENIENCE(x)
+    CONVENIENCE(y)
+    CONVENIENCE(z)
+#undef CONVENIENCE
+
+    Lab lab;
+    lab.l = (116.0 * y) - 16.0;
+    lab.a = 500.0 * (x - y);
+    lab.b = 200.0 * (y - z);
+    return lab;
 }
 
 int IRCPaintMainWindow::rgbToIrc(QRgb c) {
