@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include <QRegExp>
+#include <QFileInfo>
 
 #include <cmath>
 
@@ -192,7 +193,7 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
 bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) {
     QImage image(fname);
     if (image.isNull()) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1").arg(fname));
+        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1").arg(QFileInfo(fname).fileName()));
         return false;
     }
     QApplication::setOverrideCursor(Qt::WaitCursor);
