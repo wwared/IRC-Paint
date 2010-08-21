@@ -118,48 +118,62 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
         QList<QChar> tLine;
         for (int i = 0; i < line.length(); ++i) {
             if (line[i] == '') {                                                   // ^C
-                if (i+1 != line.length() && line[++i].isDigit()) {                  // ^C#
-                    if (i+1 != line.length() && line[++i].isDigit()) {              // ^C##
-                        if (i+1 != line.length() && line[++i] == ',') {             // ^C##,
-                            if (i+1 != line.length() && line[++i].isDigit()) {      // ^C##,#
-                                if (i+1 != line.length() && line[++i].isDigit()) {  // ^C##,##
+                i = qMin(i+1, line.length()-1);
+                if (line[i].isDigit()) {                                            // ^C#
+                    i = qMin(i+1, line.length()-1);
+                    if (line[i].isDigit()) {                                        // ^C##
+                        i = qMin(i+1, line.length()-1);
+                        if (line[i] == ',') {                                       // ^C##,
+                            i = qMin(i+1, line.length()-1);
+                            if (line[i].isDigit()) {                                // ^C##,#
+                                i = qMin(i+1, line.length()-1);
+                                if (line[i].isDigit()) {                            // ^C##,##
                                     fgCol = ircToRgb(line.mid(i-4,2).toInt());
                                     bgCol = ircToRgb(line.mid(i-1,2).toInt());
                                     continue;
                                 }
+                                --i;
                                 fgCol = ircToRgb(line.mid(i-3,2).toInt());
                                 bgCol = ircToRgb(line.mid(i,1).toInt());
                                 continue;
                             }
+                            --i;
                             fgCol = ircToRgb(line.mid(i-2,2).toInt());
                             --i;
                             continue;
                         }
+                        --i;
                         fgCol = ircToRgb(line.mid(i-1,2).toInt());
                         continue;
-                    } else if (i+1 != line.length() && line[++i] == ',') {          // ^C#,
-                        if (i+1 != line.length() && line[++i].isDigit()) {          // ^C#,#
-                            if (i+1 != line.length() && line[++i].isDigit()) {      // ^C#,##
+                    } else if (line[i] == ',') {                                    // ^C#,
+                        i = qMin(i+1, line.length()-1);
+                        if (line[i].isDigit()) {                                    // ^C#,#
+                            i = qMin(i+1, line.length()-1);
+                            if (line[i].isDigit()) {                                // ^C#,##
                                 fgCol = ircToRgb(line.mid(i-1,2).toInt());
                                 bgCol = ircToRgb(line.mid(i-3,1).toInt());
                                 continue;
                             }
+                            --i;
                             bgCol = ircToRgb(line.mid(i,1).toInt());
                             fgCol = ircToRgb(line.mid(i-2,1).toInt());
                             continue;
                         }
+                        --i;
                         fgCol = ircToRgb(line.mid(i-1,1).toInt());
                         --i;
                         continue;
                     }
+                    --i;
                     fgCol = ircToRgb(line.mid(i,1).toInt());
                     continue;
                 }
+                --i;
                 fgCol = ircToRgb(1);
                 bgCol = ircToRgb(0);
                 continue;
             }
-            if (line[i].isPrint() && line[i] != '' && line [i] != '' && line [i] != '' && line [i] != '' && line [i] != '') {
+            if (line[i].isPrint() && line[i] != '' && line[i] != '' && line[i] != '' && line[i] != '' && line[i] != '') {
                 bg.setPixel(x, y, bgCol);
                 fg.setPixel(x, y, fgCol);
                 tLine << line[i];
