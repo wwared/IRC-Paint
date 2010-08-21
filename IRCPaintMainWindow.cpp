@@ -32,7 +32,7 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     setCentralWidget(mwidget);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
 
-    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\E.txt");
+    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\WB\\colors.txt");
 
 }
 
@@ -115,6 +115,8 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
     int x = 0;
     int y = 0;
     foreach (QString line, lines) {
+        bgCol = colors[0];
+        fgCol = colors[1];
         QList<QChar> tLine;
         for (int i = 0; i < line.length(); ++i) {
             if (line[i] == '') {                                                   // ^C
@@ -150,8 +152,8 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
                         if (line[i].isDigit()) {                                    // ^C#,#
                             i = qMin(i+1, line.length());
                             if (line[i].isDigit()) {                                // ^C#,##
-                                fgCol = ircToRgb(line.mid(i-1,2).toInt());
-                                bgCol = ircToRgb(line.mid(i-3,1).toInt());
+                                bgCol = ircToRgb(line.mid(i-1,2).toInt());
+                                fgCol = ircToRgb(line.mid(i-3,1).toInt());
                                 continue;
                             }
                             --i;
