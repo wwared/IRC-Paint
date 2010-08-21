@@ -2,8 +2,6 @@
 
 #include "MainWidget.h"
 
-#include "IRCPaintMainWindow.h"
-
 MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
