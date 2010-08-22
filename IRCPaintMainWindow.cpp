@@ -230,7 +230,7 @@ bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth, bool 
         tmp << QChar();
     for (int i = 0; i < irc.height(); ++i)
         t << tmp;
-    mwidget->swapAscii(irc.width(), irc.height(), t, irc, irc);
+    mwidget->swapAscii(irc.width(), irc.height(), t, irc, fg);
     QApplication::restoreOverrideCursor();
     return true;
 }
