@@ -83,6 +83,76 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
     return true;
 }
 
+bool IRCPaintMainWindow::exportToHtml(const QString& fname) {
+    QFile file(fname);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
+        return false;
+    }
+    QTextStream out(&file);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QImage background = mwidget->getBGImage();
+    QImage foreground = mwidget->getFGImage();
+    QList<QList<QChar> > text = mwidget->getText();
+    int x = 0;
+    int y = 0;
+    out << QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n"
+                   "<html>\n<head>\n<title>%1</title>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n"
+                   "<style type=\"text/css\">\n"
+                   "pre {\n"
+                   "    margin: 0;\n"
+                   "}\n")
+            .arg(file.fileName());
+    for (int i = 0; i < 16; ++i) {
+        out << QString(".f%1 {\n"
+                       "    color: %2;\n"
+                       "}\n"
+                       ".b%1 {\n"
+                       "    background-color: %2;\n"
+                       "}\n")
+                .arg(i).arg(rgbToHtml(colors[i]));
+    }
+    out << "</style>\n</head>\n<body>\n\n<pre>";
+    foreach(QList<QChar> l, text) {
+        QRgb bg = qRgb(0,0,0);
+        QRgb fg = qRgb(0,0,0);
+        bool first = true;
+        QString str;
+        foreach(QChar c, l) {
+            if (c.isNull()) {
+                str = ' ';
+            } else if (c == '<') {
+                str = "&lt;";
+            } else if (c == '>') {
+                str = "&gt;";
+            } else if (c == '&') {
+                str = "&amp;";
+            } else {
+                str = c;
+            }
+            QRgb oldfg = fg;
+            fg = foreground.pixel(x,y);
+            QRgb oldbg = bg;
+            bg = background.pixel(x,y);
+            if (bg != oldbg || fg != oldfg || first) {
+                if (!first) {
+                    out << "</span>";
+                }
+                out << QString("<span class=\"f%1 b%2\">").arg(rgbToIrc(fg)).arg(rgbToIrc(bg));
+            }
+            out << str;
+            ++x;
+            first = false;
+        }
+        out << "</span>\n";
+        x = 0;
+        ++y;
+    }
+    out << "</pre>\n\n</body>\n</html>";
+    QApplication::restoreOverrideCursor();
+    return true;
+}
+
 bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -299,6 +369,22 @@ QRgb IRCPaintMainWindow::ircToRgb(int i) {
     while (i > 15)
         i -= 15;
     return colors[i];
+}
+
+QString IRCPaintMainWindow::rgbToHtml(QRgb c) {
+    QString r = QString("%1").arg(qRed(c), 0, 16);
+    if (r.length() == 1) {
+        r = "0"+r;
+    }
+    QString g = QString("%1").arg(qGreen(c), 0, 16);
+    if (g.length() == 1) {
+        g = "0"+g;
+    }
+    QString b = QString("%1").arg(qBlue(c), 0, 16);
+    if (b.length() == 1) {
+        b = "0"+b;
+    }
+    return "#"+r+g+b;
 }
 
 void IRCPaintMainWindow::swapIrcColor(int i, QRgb c) {
