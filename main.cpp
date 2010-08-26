@@ -15,6 +15,7 @@
    * * Use signals and slots where applicable for communication between the main window, widgets and brushes
    * * Implement scrollbars in the main window
    * * Make sure irc paint doesn't lag like a fat bitch when working with large asciis
+   * * Add further options for html exporting
    *
    * */
 

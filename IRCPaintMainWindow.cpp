@@ -29,7 +29,6 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     colors[15] = qRgb(210,210,210);
     mwidget =  new MainWidget(this, &colors);
     setCentralWidget(mwidget);
-    QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
 }
 
 bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
@@ -96,13 +95,14 @@ bool IRCPaintMainWindow::exportToHtml(const QString& fname) {
     QList<QList<QChar> > text = mwidget->getText();
     int x = 0;
     int y = 0;
+    QFileInfo f(file);
     out << QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n"
                    "<html>\n<head>\n<title>%1</title>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n"
                    "<style type=\"text/css\">\n"
                    "pre {\n"
                    "    margin: 0;\n"
                    "}\n")
-            .arg(file.fileName());
+            .arg(f.baseName());
     for (int i = 0; i < 16; ++i) {
         out << QString(".f%1 {\n"
                        "    color: %2;\n"
