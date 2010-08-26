@@ -30,9 +30,6 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     mwidget =  new MainWidget(this, &colors);
     setCentralWidget(mwidget);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
-    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\E.txt");
-    exportToHtml("tesStinG.html");
-    exit(0);
 }
 
 bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
