@@ -30,6 +30,9 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     mwidget =  new MainWidget(this, &colors);
     setCentralWidget(mwidget);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
+    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\E.txt");
+    exportToHtml("tesStinG.html");
+    exit(0);
 }
 
 bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
@@ -103,7 +106,7 @@ bool IRCPaintMainWindow::exportToHtml(const QString& fname) {
                    "pre {\n"
                    "    margin: 0;\n"
                    "}\n")
-            .arg(f.baseName());
+            .arg(f.baseName()[0].toUpper()+f.baseName().right(f.baseName().size()-1));
     for (int i = 0; i < 16; ++i) {
         out << QString(".f%1 {\n"
                        "    color: %2;\n"
