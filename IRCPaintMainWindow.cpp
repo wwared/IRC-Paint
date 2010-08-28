@@ -109,10 +109,13 @@ bool IRCPaintMainWindow::exportToTerminal(const QString& fname) {
             bg = background.pixel(x,y);
             if (first) {
                 out << ircToTerminal(rgbToIrc(fg), false) << ircToTerminal(rgbToIrc(bg), true);
-            } else if (bg != oldbg) {
-                out << ircToTerminal(rgbToIrc(bg), true);
-            } else if (fg != oldfg) {
-                out << ircToTerminal(rgbToIrc(fg), false);
+            } else {
+                if (bg != oldbg) {
+                    out << ircToTerminal(rgbToIrc(bg), true);
+                }
+                if (fg != oldfg) {
+                    out << ircToTerminal(rgbToIrc(fg), false);
+                }
             }
             out << c;
             ++x;
