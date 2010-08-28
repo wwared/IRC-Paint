@@ -177,9 +177,8 @@ bool IRCPaintMainWindow::exportToHtml(const QString& fname) {
             QRgb oldbg = bg;
             bg = background.pixel(x,y);
             if (bg != oldbg || fg != oldfg || first) {
-                if (!first) {
+                if (!first)
                     out << "</span>";
-                }
                 out << QString("<span class=\"f%1 b%2\">").arg(rgbToIrc(fg)).arg(rgbToIrc(bg));
             }
             out << str;
