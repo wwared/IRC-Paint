@@ -30,6 +30,10 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     mwidget =  new MainWidget(this, &colors);
     setCentralWidget(mwidget);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
+
+    importFromTxt("C:\\Users\\Admin\\Desktop\\Ascii\\E.txt");
+    exportToTerminal("dicks.txt");
+    exit(0);
 }
 
 bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
@@ -76,6 +80,49 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
             first = false;
         }
         out << "\n";
+        x = 0;
+        ++y;
+    }
+    QApplication::restoreOverrideCursor();
+    return true;
+}
+
+bool IRCPaintMainWindow::exportToTerminal(const QString& fname) {
+    QFile file(fname);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
+        return false;
+    }
+    QTextStream out(&file);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QImage background = mwidget->getBGImage();
+    QImage foreground = mwidget->getFGImage();
+    QList<QList<QChar> > text = mwidget->getText();
+    int x = 0;
+    int y = 0;
+    foreach(QList<QChar> l, text) {
+        QRgb bg = qRgb(0,0,0);
+        QRgb fg = qRgb(0,0,0);
+        bool first = true;
+        foreach(QChar c, l) {
+            if (c.isNull())
+                c = ' ';
+            QRgb oldfg = fg;
+            fg = foreground.pixel(x,y);
+            QRgb oldbg = bg;
+            bg = background.pixel(x,y);
+            if (first) {
+                out << ircToTerminal(rgbToIrc(fg), false) << ircToTerminal(rgbToIrc(bg), true);
+            } else if (bg != oldbg) {
+                out << ircToTerminal(rgbToIrc(bg), true);
+            } else if (fg != oldfg) {
+                out << ircToTerminal(rgbToIrc(fg), false);
+            }
+            out << c;
+            ++x;
+            first = false;
+        }
+        out << "\033[0m\n";
         x = 0;
         ++y;
     }
@@ -386,6 +433,60 @@ QString IRCPaintMainWindow::rgbToHtml(QRgb c) {
         b = "0"+b;
     }
     return "#"+r+g+b;
+}
+
+QString IRCPaintMainWindow::ircToTerminal(int i, bool bg) {
+    while (i > 15)
+        i -= 15;
+    int ret = bg ? 40 : 30;
+    bool bright = false;
+    switch (i) {
+    case 0: // white
+        bright = true;
+    case 15: // light gray
+        ret += 7;
+        break;
+    case 14: // dark grey
+        bright = true;
+    case 1: // black
+        break;
+    case 12: // blue
+        bright = true;
+    case 2: // dark blue
+        ret += 4;
+        break;
+    case 9: // lime green
+        bright = true;
+    case 3: // dark green
+        ret += 2;
+        break;
+    case 4: // red
+        bright = true;
+    case 5: // dark red
+        ret += 1;
+        break;
+    case 13: // pink
+        bright = true;
+    case 6: // purple
+        ret += 5;
+        break;
+    case 8: // yellow
+        bright = true;
+    case 7: // orange (no better choice)
+        ret += 3;
+        break;
+    case 11: // sky blue
+        bright = true;
+    case 10: // teal
+        ret += 6;
+        break;
+    default:
+        qCritical("FATAL: unexpected fall through in irc -> terminal conversion");
+    }
+    QString r("\033[");
+    r += bright ? "1;" : "" ;
+    r += QString("%1m").arg(ret);
+    return r;
 }
 
 void IRCPaintMainWindow::swapIrcColor(int i, QRgb c) {
