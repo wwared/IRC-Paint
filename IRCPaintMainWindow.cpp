@@ -479,10 +479,7 @@ QString IRCPaintMainWindow::ircToTerminal(int i, bool bg) {
     default:
         qCritical("FATAL: unexpected fall through in irc -> terminal conversion");
     }
-    QString r("\033[");
-    r += bright ? "1;" : "" ;
-    r += QString("%1m").arg(ret);
-    return r;
+    return QString("\033[%1%2m").arg(bright ? "1;" : "").arg(ret);
 }
 
 void IRCPaintMainWindow::swapIrcColor(int i, QRgb c) {
