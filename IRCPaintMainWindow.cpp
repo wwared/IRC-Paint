@@ -107,10 +107,10 @@ bool IRCPaintMainWindow::exportToTerminal(const QString& fname) {
             fg = foreground.pixel(x,y);
             QRgb oldbg = bg;
             bg = background.pixel(x,y);
-            if (first) {
+            if (bg != oldbg || fg != oldfg || first) {
+                if (!first)
+                    out << "\033[0m";
                 out << ircToTerminal(rgbToIrc(fg), false) << ircToTerminal(rgbToIrc(bg), true);
-            } else if (bg != oldbg || fg != oldfg) {
-                out << "\033[0m" << ircToTerminal(rgbToIrc(fg), false) << ircToTerminal(rgbToIrc(bg), true);
             }
             out << c;
             ++x;
