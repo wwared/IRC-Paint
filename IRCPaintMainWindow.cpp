@@ -109,13 +109,8 @@ bool IRCPaintMainWindow::exportToTerminal(const QString& fname) {
             bg = background.pixel(x,y);
             if (first) {
                 out << ircToTerminal(rgbToIrc(fg), false) << ircToTerminal(rgbToIrc(bg), true);
-            } else {
-                if (bg != oldbg) {
-                    out << ircToTerminal(rgbToIrc(bg), true);
-                }
-                if (fg != oldfg) {
-                    out << ircToTerminal(rgbToIrc(fg), false);
-                }
+            } else if (bg != oldbg || fg != oldfg) {
+                out << "\033[0m" << ircToTerminal(rgbToIrc(fg), false) << ircToTerminal(rgbToIrc(bg), true);
             }
             out << c;
             ++x;
@@ -482,7 +477,7 @@ QString IRCPaintMainWindow::ircToTerminal(int i, bool bg) {
     default:
         qCritical("FATAL: unexpected fall through in irc -> terminal conversion");
     }
-    return QString("\033[%1%2m").arg(bright ? "1;" : "").arg(ret);
+    return QString("\033[%1%2m").arg(bright ? (bg ? "5;" : "1;") : "").arg(ret);
 }
 
 void IRCPaintMainWindow::swapIrcColor(int i, QRgb c) {
