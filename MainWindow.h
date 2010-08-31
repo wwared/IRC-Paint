@@ -1,15 +1,15 @@
-#ifndef IRCPAINTMAINWINDOW_H
-#define IRCPAINTMAINWINDOW_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
 
 #include "MainWidget.h"
 
-class IRCPaintMainWindow : public QMainWindow {
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit IRCPaintMainWindow();
+    explicit MainWindow();
     bool exportToTxt(const QString& fname);
     bool exportToTerminal(const QString& fname);
     bool exportToHtml(const QString& fname);
@@ -35,4 +35,4 @@ private:
     MainWidget* mwidget;
 };
 
-#endif // IRCPAINTMAINWINDOW_H
+#endif // MAINWINDOW_H

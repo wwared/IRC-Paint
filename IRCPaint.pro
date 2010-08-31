@@ -13,19 +13,20 @@ macx:ICON = IRCPaint.icns
 win32:RC_FILE = IRCPaint.rc
 
 SOURCES += main.cpp\
-        IRCPaintMainWindow.cpp \
     MainWidget.cpp \
     Brush.cpp \
     Brush_Pen.cpp \
     Brush_Line.cpp \
-    Brush_Rect.cpp
+    Brush_Rect.cpp \
+    MainWindow.cpp
 
-HEADERS  += IRCPaintMainWindow.h \
+HEADERS  += \
     MainWidget.h \
     Brush.h \
     Brush_Pen.h \
     Brush_Line.h \
-    Brush_Rect.h
+    Brush_Rect.h \
+    MainWindow.h
 
 OTHER_FILES += \
     IRCPaint.rc

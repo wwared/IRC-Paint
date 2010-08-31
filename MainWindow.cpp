@@ -1,4 +1,4 @@
-#include "IRCPaintMainWindow.h"
+#include "MainWindow.h"
 
 #include <QtGui/QApplication>
 #include <QMap>
@@ -10,7 +10,7 @@
 
 #include <cmath>
 
-IRCPaintMainWindow::IRCPaintMainWindow() {
+MainWindow::MainWindow() {
     colors[0]  = qRgb(255,255,255);
     colors[1]  = qRgb(0  ,0  ,  0);
     colors[2]  = qRgb(0  ,0  ,127);
@@ -32,7 +32,7 @@ IRCPaintMainWindow::IRCPaintMainWindow() {
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
 }
 
-bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
+bool MainWindow::exportToTxt(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
@@ -83,7 +83,7 @@ bool IRCPaintMainWindow::exportToTxt(const QString& fname) {
     return true;
 }
 
-bool IRCPaintMainWindow::exportToTerminal(const QString& fname) {
+bool MainWindow::exportToTerminal(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
@@ -124,7 +124,7 @@ bool IRCPaintMainWindow::exportToTerminal(const QString& fname) {
     return true;
 }
 
-bool IRCPaintMainWindow::exportToHtml(const QString& fname) {
+bool MainWindow::exportToHtml(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
@@ -194,7 +194,7 @@ bool IRCPaintMainWindow::exportToHtml(const QString& fname) {
     return true;
 }
 
-bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
+bool MainWindow::importFromTxt(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
@@ -301,7 +301,7 @@ bool IRCPaintMainWindow::importFromTxt(const QString& fname) {
     return true;
 }
 
-bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) {
+bool MainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) {
     QImage image(fname);
     if (image.isNull()) {
         QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1").arg(QFileInfo(fname).fileName()));
@@ -346,7 +346,7 @@ bool IRCPaintMainWindow::importFromImg(const QString& fname, int maxWidth, bool 
     return true;
 }
 
-QRgb IRCPaintMainWindow::closestColor(const QRgb& c, const QMap<int, Lab>& labColors) {
+QRgb MainWindow::closestColor(const QRgb& c, const QMap<int, Lab>& labColors) {
     double shortestDistance;
     int index;
     Lab col = rgbToLab(c);
@@ -360,7 +360,7 @@ QRgb IRCPaintMainWindow::closestColor(const QRgb& c, const QMap<int, Lab>& labCo
     return colors[index];
 }
 
-IRCPaintMainWindow::Lab IRCPaintMainWindow::rgbToLab(const QRgb &c) {
+MainWindow::Lab MainWindow::rgbToLab(const QRgb &c) {
     double r = double(qRed(c))   / 255.0;
     double g = double(qGreen(c)) / 255.0;
     double b = double(qBlue(c))  / 255.0;
@@ -399,20 +399,20 @@ IRCPaintMainWindow::Lab IRCPaintMainWindow::rgbToLab(const QRgb &c) {
     return lab;
 }
 
-int IRCPaintMainWindow::rgbToIrc(QRgb c) {
+int MainWindow::rgbToIrc(QRgb c) {
     int i = colors.key(c, -1);
     if (i == -1)
         qCritical("FATAL: colors does NOT contain irc representation of %d", c);
     return i;
 }
 
-QRgb IRCPaintMainWindow::ircToRgb(int i) {
+QRgb MainWindow::ircToRgb(int i) {
     while (i > 15)
         i -= 15;
     return colors[i];
 }
 
-QString IRCPaintMainWindow::rgbToHtml(QRgb c) {
+QString MainWindow::rgbToHtml(QRgb c) {
     QString r = QString("%1").arg(qRed(c), 0, 16);
     if (r.length() == 1) {
         r = "0"+r;
@@ -428,7 +428,7 @@ QString IRCPaintMainWindow::rgbToHtml(QRgb c) {
     return "#"+r+g+b;
 }
 
-QString IRCPaintMainWindow::ircToTerminal(int i, bool bg) {
+QString MainWindow::ircToTerminal(int i, bool bg) {
     while (i > 15)
         i -= 15;
     int ret = bg ? 40 : 30;
@@ -479,7 +479,7 @@ QString IRCPaintMainWindow::ircToTerminal(int i, bool bg) {
     return QString("\033[%1%2m").arg(bright ? (bg ? "5;" : "1;") : "").arg(ret);
 }
 
-void IRCPaintMainWindow::swapIrcColor(int i, QRgb c) {
+void MainWindow::swapIrcColor(int i, QRgb c) {
     while (i > 15)
         i -= 15;
     QRgb oldc = colors[i];
