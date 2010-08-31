@@ -37,8 +37,6 @@ MainWindow::MainWindow() {
     scroll->setWidget(mwidget);
     setCentralWidget(scroll);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
-
-    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\bigmatix.txt");
 }
 
 bool MainWindow::exportToTxt(const QString& fname) {
