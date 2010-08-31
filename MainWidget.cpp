@@ -325,12 +325,8 @@ void MainWidget::swapAscii(int w, int h, QList<QList<QChar> > t, QImage b, QImag
     adjustSize();
 }
 
-QRect MainWidget::pixelRect(int i, int j) const {
-    if (showGrid) {
-        return QRect(xsize * i + 1, ysize * j + 1, xsize - 1, ysize - 1);
-    } else {
-        return QRect(xsize * i, ysize * j, xsize, ysize);
-    }
+inline QRect MainWidget::pixelRect(int i, int j) const {
+    return showGrid ? QRect(xsize * i + 1, ysize * j + 1, xsize - 1, ysize - 1) : QRect(xsize * i, ysize * j, xsize, ysize);
 }
 
 void MainWidget::addRows(int place, int n) {
