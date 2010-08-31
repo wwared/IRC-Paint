@@ -33,7 +33,6 @@ MainWindow::MainWindow() {
     scroll = new QScrollArea(this);
     scroll->setBackgroundRole(QPalette::Dark);
     mwidget =  new MainWidget(this, &colors);
-    mwidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     scroll->setWidget(mwidget);
     setCentralWidget(scroll);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
