@@ -4,7 +4,7 @@
 
 MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
-    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setFocusPolicy(Qt::StrongFocus);
 
     colors = colors;
