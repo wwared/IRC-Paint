@@ -15,6 +15,7 @@ public:
     bool exportToTxt(const QString& fname);
     bool exportToTerminal(const QString& fname);
     bool exportToHtml(const QString& fname);
+    bool exportToImg(const QString& fname, bool grid); // image type is inferred from filename
     bool importFromTxt(const QString& fname);
     bool importFromImg(const QString& fname, int maxWidth, bool smooth); // maxWidth is the maximum number of ascii cells; if smooth is true, use bilinear interpolation while scaling down
     int rgbToIrc(QRgb c);

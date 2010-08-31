@@ -89,6 +89,17 @@ bool MainWindow::exportToTxt(const QString& fname) {
     return true;
 }
 
+bool MainWindow::exportToImg(const QString& fname, bool grid) {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    if (!mwidget->getRenderedImage(grid).save(fname)) {
+        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot save to file %1").arg(QFileInfo(fname).fileName()));
+        QApplication::restoreOverrideCursor();
+        return false;
+    }
+    QApplication::restoreOverrideCursor();
+    return true;
+}
+
 bool MainWindow::exportToTerminal(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {

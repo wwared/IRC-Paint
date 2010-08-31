@@ -194,6 +194,38 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
     }
 }
 
+QImage MainWidget::getRenderedImage(bool g) const {
+    QSize size(xsize*xasc, ysize*yasc);
+    if (g)
+        size += QSize(1, 1);
+    QImage image(size, QImage::Format_ARGB32);
+    QPainter painter(&image);
+
+    if (g) {
+        painter.setPen(palette().windowText().color());
+        for (int i = 0; i <= xasc; ++i)
+            painter.drawLine(xsize * i, 0,
+                                 xsize * i, ysize * yasc);
+        for (int j = 0; j <= yasc; ++j)
+            painter.drawLine(0, ysize * j,
+                                 xsize * xasc, ysize * j);
+    }
+
+    for (int i = 0; i < xasc; ++i) {
+        for (int j = 0; j < yasc; ++j) {
+            QRect rect = g ? QRect(xsize * i + 1, ysize * j + 1, xsize - 1, ysize - 1) : QRect(xsize * i, ysize * j, xsize, ysize);;
+            painter.fillRect(rect, QColor::fromRgb(background.pixel(i, j)));
+            painter.setPen(QColor::fromRgb(foreground.pixel(i,j)));
+            QChar c = text.at(j).at(i);
+            if (c.isNull())
+                c = ' ';
+            painter.drawText(rect.translated(1,0), Qt::AlignCenter, c);
+        }
+    }
+    painter.end();
+    return image;
+}
+
 void MainWidget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
