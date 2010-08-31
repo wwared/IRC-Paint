@@ -46,6 +46,7 @@ void MainWidget::setGrid(bool g) {
         showGrid = g;
         update();
         updateGeometry();
+        adjustSize();
     }
 }
 
@@ -56,6 +57,7 @@ void MainWidget::setRectWidth(int x) {
         xsize = x;
         update();
         updateGeometry();
+        adjustSize();
     }
 }
 
@@ -66,6 +68,7 @@ void MainWidget::setRectHeight(int y) {
         ysize = y;
         update();
         updateGeometry();
+        adjustSize();
     }
 }
 
@@ -287,6 +290,7 @@ void MainWidget::swapAscii(int w, int h, QList<QList<QChar> > t, QImage b, QImag
     foreground = f;
     update();
     updateGeometry();
+    adjustSize();
 }
 
 QRect MainWidget::pixelRect(int i, int j) const {
@@ -337,6 +341,7 @@ void MainWidget::addRows(int place, int n) {
     yasc += n;
     update();
     updateGeometry();
+    adjustSize();
 }
 
 void MainWidget::delRows(int place, int n) {
@@ -373,6 +378,7 @@ void MainWidget::delRows(int place, int n) {
     yasc -= n;
     update();
     updateGeometry();
+    adjustSize();
 }
 
 void MainWidget::addColumns(int place, int n) {
@@ -410,6 +416,7 @@ void MainWidget::addColumns(int place, int n) {
     xasc += n;
     update();
     updateGeometry();
+    adjustSize();
 }
 
 void MainWidget::delColumns(int place, int n) {
@@ -448,6 +455,7 @@ void MainWidget::delColumns(int place, int n) {
     xasc -= n;
     update();
     updateGeometry();
+    adjustSize();
 }
 
 void MainWidget::setBrush(BrushType b) {

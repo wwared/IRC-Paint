@@ -7,29 +7,38 @@
 #include <QMessageBox>
 #include <QRegExp>
 #include <QFileInfo>
+#include <QScrollArea>
 
 #include <cmath>
 
+#include "MainWidget.h"
+
 MainWindow::MainWindow() {
     colors[0]  = qRgb(255,255,255);
-    colors[1]  = qRgb(0  ,0  ,  0);
+    colors[1]  = qRgb(0  ,0  ,0  );
     colors[2]  = qRgb(0  ,0  ,127);
-    colors[3]  = qRgb(0  ,147,  0);
-    colors[4]  = qRgb(255,0  ,  0);
-    colors[5]  = qRgb(127,0  ,  0);
+    colors[3]  = qRgb(0  ,147,0  );
+    colors[4]  = qRgb(255,0  ,0  );
+    colors[5]  = qRgb(127,0  ,0  );
     colors[6]  = qRgb(156,0  ,156);
-    colors[7]  = qRgb(252,127,  0);
-    colors[8]  = qRgb(255,255,  0);
-    colors[9]  = qRgb(0  ,252,  0);
+    colors[7]  = qRgb(252,127,0  );
+    colors[8]  = qRgb(255,255,0  );
+    colors[9]  = qRgb(0  ,252,0  );
     colors[10] = qRgb(0  ,147,147);
     colors[11] = qRgb(0  ,255,255);
     colors[12] = qRgb(0  ,0  ,252);
     colors[13] = qRgb(255,0  ,255);
     colors[14] = qRgb(127,127,127);
     colors[15] = qRgb(210,210,210);
+    scroll = new QScrollArea(this);
+    scroll->setBackgroundRole(QPalette::Dark);
     mwidget =  new MainWidget(this, &colors);
-    setCentralWidget(mwidget);
+    mwidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    scroll->setWidget(mwidget);
+    setCentralWidget(scroll);
     QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
+
+    importFromTxt("C:\\Users\\Admin\\Desktop\\ascii\\bigmatix.txt");
 }
 
 bool MainWindow::exportToTxt(const QString& fname) {

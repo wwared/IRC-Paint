@@ -1,9 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QMap>
 #include <QMainWindow>
 
-#include "MainWidget.h"
+class MainWidget;
+class QScrollArea;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -32,6 +34,7 @@ private:
     QRgb closestColor(const QRgb& c, const QMap<int, Lab>& labColors);
 
     QMap<int, QRgb> colors;
+    QScrollArea* scroll;
     MainWidget* mwidget;
 };
 
