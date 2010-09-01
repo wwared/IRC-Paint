@@ -8,8 +8,6 @@ class MainWidget;
 class QScrollArea;
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
-
 public:
     explicit MainWindow();
     bool exportToTxt(const QString& fname);
