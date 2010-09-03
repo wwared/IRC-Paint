@@ -299,7 +299,7 @@ bool MainWindow::importFromTxt(const QString& fname) {
                 bgCol = ircToRgb(0);
                 continue;
             }
-            if (line[i].isPrint() && line[i] != '' && line[i] != '' && line[i] != '' && line[i] != '' && line[i] != '') {
+            if (line[i].isPrint() && line[i] != '' && line[i] != '' && line[i] != '' && line[i] != '') {
                 bg.setPixel(x, y, bgCol);
                 fg.setPixel(x, y, fgCol);
                 tLine << line[i];
