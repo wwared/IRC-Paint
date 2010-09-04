@@ -40,6 +40,12 @@ MainWindow::MainWindow() : toolbarSize(16, 16) {
     scroll = new QScrollArea(this);
     mwidget =  new MainWidget(this, &colors);
 
+    for (int i = 0; i < maxRecentFiles; ++i) {
+        recentFileActions[i] = new QAction(this);
+        recentFileActions[i]->setVisible(false);
+        connect(recentFileActions[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    }
+
     newAction = new QAction(tr("&New"), this);
     newAction->setIcon(QIcon(":/buttons/new.png"));
     newAction->setShortcut(QKeySequence::New);
@@ -77,6 +83,9 @@ MainWindow::MainWindow() : toolbarSize(16, 16) {
     QList<QAction*> actions;
     actions << newAction << openAction << saveAction << saveAsAction;
     fileMenu->addActions(actions);
+    recentFileSeparatorAction = fileMenu->addSeparator();
+    for (int i = 0; i < maxRecentFiles; ++i)
+        fileMenu->addAction(recentFileActions[i]);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
     actions.clear();
@@ -140,6 +149,9 @@ void MainWindow::setCurrentFile(const QString& fname) {
     QString shownName = tr("Untitled");
     if (!curFile.isEmpty()) {
         shownName = QFileInfo(curFile).fileName();
+        recentFiles.removeAll(curFile);
+        recentFiles.prepend(curFile);
+        updateRecentFiles();
     }
 
     setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(getName()));
@@ -193,6 +205,8 @@ void MainWindow::readSettings() {
     mwidget->setGrid(g);
     showGridAction->setChecked(g);
     setToolbarSize(settings.value("toolbarSize", toolbarSize).toSize());
+    recentFiles = settings.value("recentFiles").toStringList();
+    updateRecentFiles();
 }
 
 void MainWindow::writeSettings() {
@@ -200,11 +214,38 @@ void MainWindow::writeSettings() {
     settings.setValue("geometry", saveGeometry());
     settings.setValue("showGrid", mwidget->gridShown());
     settings.setValue("toolbarSize", toolbarSize);
+    settings.setValue("recentFiles", recentFiles);
 }
 
 void MainWindow::setToolbarSize(const QSize& s) {
     toolbarSize = s;
     fileToolBar->setIconSize(toolbarSize);
+}
+
+void MainWindow::updateRecentFiles() {
+    QStringList::iterator it;
+    for (it = recentFiles.begin(); it != recentFiles.end(); ++it) {
+        if (!QFile::exists(*it))
+            recentFiles.erase(it);
+    }
+    for (int i = 0; i < maxRecentFiles; ++i) {
+        if (i < recentFiles.count()) {
+            recentFileActions[i]->setText(QString("&%1 %2").arg(i+1).arg(QFileInfo(recentFiles[i]).fileName()));
+            recentFileActions[i]->setData(recentFiles[i]);
+            recentFileActions[i]->setVisible(true);
+        } else {
+            recentFileActions[i]->setVisible(false);
+        }
+    }
+    recentFileSeparatorAction->setVisible(!recentFiles.isEmpty());
+}
+
+void MainWindow::openRecentFile() {
+    if (okToContinue()) {
+        QAction* a = qobject_cast<QAction*>(sender());
+        if (a)
+            importFromTxt(a->data().toString());
+    }
 }
 
 bool MainWindow::exportToTxt(const QString& fname) {
@@ -532,8 +573,7 @@ bool MainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) 
         t << tmp;
     mwidget->swapAscii(irc.width(), irc.height(), t, irc, fg);
     QApplication::restoreOverrideCursor();
-    QString f = fname;
-    setCurrentFile(f.replace(QRegExp("\\..+?$"), ".txt"));
+    setCurrentFile("");
     return true;
 }
 

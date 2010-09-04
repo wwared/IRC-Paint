@@ -22,6 +22,7 @@ private slots:
     bool save();
     bool saveAs();
     void about();
+    void openRecentFile();
 
 protected:
     void closeEvent(QCloseEvent* event);
@@ -30,6 +31,7 @@ private:
     void writeSettings();
     void readSettings();
     bool okToContinue();
+    void updateRecentFiles();
     void setToolbarSize(const QSize& s);
     void setCurrentFile(const QString& fname);
     bool exportToTxt(const QString& fname);
@@ -54,8 +56,14 @@ private:
 
     QMap<int, QRgb> colors;
     QSize toolbarSize;
+
     QScrollArea* scroll;
     MainWidget* mwidget;
+
+    QStringList recentFiles;
+    static const unsigned short int maxRecentFiles = 5;
+    QAction* recentFileActions[maxRecentFiles];
+    QAction* recentFileSeparatorAction;
 
     QAction* newAction;
     QAction* openAction;
