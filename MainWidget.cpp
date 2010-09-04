@@ -48,6 +48,7 @@ void MainWidget::clearAscii() {
     background.fill((*colors)[0]);
     foreground = QImage(xasc, yasc, QImage::Format_RGB32);
     foreground.fill((*colors)[1]);
+    text.clear();
     QList<QChar> l;
     for (int i = 0; i < xasc; ++i) {
         l << QChar();
