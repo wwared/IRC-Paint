@@ -9,6 +9,7 @@ class QScrollArea;
 class QAction;
 class QCloseEvent;
 class QMenu;
+class QToolBar;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -29,6 +30,7 @@ private:
     void writeSettings();
     void readSettings();
     bool okToContinue();
+    void setToolbarSize(const QSize& s);
     void setCurrentFile(const QString& fname);
     bool exportToTxt(const QString& fname);
     bool exportToTerminal(const QString& fname);
@@ -51,6 +53,7 @@ private:
     QRgb closestColor(const QRgb& c, const QMap<int, Lab>& labColors);
 
     QMap<int, QRgb> colors;
+    QSize toolbarSize;
     QScrollArea* scroll;
     MainWidget* mwidget;
 
@@ -65,6 +68,7 @@ private:
     QMenu* fileMenu;
     QMenu* toolsMenu;
     QMenu* helpMenu;
+    QToolBar* fileToolBar;
 };
 
 #endif // MAINWINDOW_H

@@ -13,12 +13,13 @@
 #include <QSettings>
 #include <QFileDialog>
 #include <QMenuBar>
+#include <QToolBar>
 
 #include <cmath>
 
 #include "MainWidget.h"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow() : toolbarSize(16, 16) {
     colors[0]  = qRgb(255,255,255);
     colors[1]  = qRgb(0  ,0  ,0  );
     colors[2]  = qRgb(0  ,0  ,127);
@@ -89,6 +90,11 @@ MainWindow::MainWindow() {
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAction);
     helpMenu->addAction(aboutQtAction);
+
+    fileToolBar = addToolBar(tr("&File Toolbar"));
+    actions << newAction << openAction << saveAction;
+    fileToolBar->addActions(actions);
+    actions.clear();
 
     scroll->setBackgroundRole(QPalette::Dark);
     scroll->setWidget(mwidget);
@@ -186,12 +192,19 @@ void MainWindow::readSettings() {
     bool g = settings.value("showGrid", true).toBool();
     mwidget->setGrid(g);
     showGridAction->setChecked(g);
+    setToolbarSize(settings.value("toolbarSize", QSize(16, 16)).toSize());
 }
 
 void MainWindow::writeSettings() {
     QSettings settings("BR Software inc.", "IRC Paint");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("showGrid", mwidget->gridShown());
+    settings.setValue("toolbarSize", toolbarSize);
+}
+
+void MainWindow::setToolbarSize(const QSize& s) {
+    toolbarSize = s;
+    fileToolBar->setIconSize(toolbarSize);
 }
 
 bool MainWindow::exportToTxt(const QString& fname) {

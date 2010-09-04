@@ -56,6 +56,9 @@ void MainWidget::clearAscii() {
     for (int i = 0; i < yasc; ++i) {
         text << l;
     }
+    update();
+    updateGeometry();
+    adjustSize();
 }
 
 void MainWidget::setGrid(bool g) {
