@@ -2,12 +2,12 @@
 
 #include "MainWidget.h"
 
-MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* colors) : QWidget(parent) {
+MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setFocusPolicy(Qt::StrongFocus);
 
-    colors = colors;
+    colors = c;
     bgColor = (*colors)[1];
     fgColor = (*colors)[15];
     selColor = Qt::yellow;

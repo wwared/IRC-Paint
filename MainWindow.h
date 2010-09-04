@@ -8,6 +8,7 @@ class MainWidget;
 class QScrollArea;
 class QAction;
 class QCloseEvent;
+class QMenu;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -61,6 +62,9 @@ private:
     QAction* aboutAction;
     QAction* aboutQtAction;
     QAction* showGridAction;
+    QMenu* fileMenu;
+    QMenu* toolsMenu;
+    QMenu* helpMenu;
 };
 
 #endif // MAINWINDOW_H

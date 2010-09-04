@@ -12,6 +12,7 @@
 #include <QCloseEvent>
 #include <QSettings>
 #include <QFileDialog>
+#include <QMenuBar>
 
 #include <cmath>
 
@@ -41,43 +42,53 @@ MainWindow::MainWindow() {
     newAction = new QAction(tr("&New"), this);
     newAction->setIcon(QIcon(":/buttons/new.png"));
     newAction->setShortcut(QKeySequence::New);
-    newAction->setStatusTip(tr("Create a new ascii"));
     connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
 
     openAction = new QAction(tr("&Open..."), this);
     openAction->setIcon(QIcon(":/buttons/open.png"));
     openAction->setShortcut(QKeySequence::Open);
-    openAction->setStatusTip(tr("Open an existing ascii"));
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
 
     saveAction = new QAction(tr("&Save"), this);
     saveAction->setIcon(QIcon(":/buttons/save.png"));
     saveAction->setShortcut(QKeySequence::Save);
-    saveAction->setStatusTip(tr("Save the ascii"));
     connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
 
     saveAsAction = new QAction(tr("Save &As..."), this);
-    saveAsAction->setStatusTip(tr("Save the ascii under a new name"));
     connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcut(tr("Ctrl+Q"));
-    exitAction->setStatusTip(tr("Exit the application"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
     aboutAction = new QAction(tr("&About"), this);
-    aboutAction->setStatusTip(tr("Show the About box"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
     aboutQtAction = new QAction(tr("About &Qt"), this);
-    aboutQtAction->setStatusTip(tr("Show the Qt library's About box"));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
     showGridAction = new QAction(tr("&Show Grid"), this);
     showGridAction->setCheckable(true);
     showGridAction->setChecked(mwidget->gridShown());
-    showGridAction->setStatusTip(tr("Show or hide the grid"));
     connect(showGridAction, SIGNAL(toggled(bool)), mwidget, SLOT(setGrid(bool)));
+
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    QList<QAction*> actions;
+    actions << newAction << openAction << saveAction << saveAsAction;
+    fileMenu->addActions(actions);
+    fileMenu->addSeparator();
+    fileMenu->addAction(exitAction);
+    actions.clear();
+
+    toolsMenu = menuBar()->addMenu(tr("&Tools"));
+    toolsMenu->addAction(showGridAction);
+    // preferences go here
+
+    menuBar()->addSeparator();
+
+    helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(aboutAction);
+    helpMenu->addAction(aboutQtAction);
 
     scroll->setBackgroundRole(QPalette::Dark);
     scroll->setWidget(mwidget);

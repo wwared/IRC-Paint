@@ -41,7 +41,7 @@ class MainWidget : public QWidget {
     friend class Brush_Rect;
 
 public:
-    explicit MainWidget(QWidget *parent, QMap<int, QRgb>* colors);
+    explicit MainWidget(QWidget *parent, QMap<int, QRgb>* c);
     ~MainWidget();
 
     void swapAscii(int w, int h, QList<QList<QChar> > t, QImage b, QImage f);
