@@ -192,7 +192,7 @@ void MainWindow::readSettings() {
     bool g = settings.value("showGrid", true).toBool();
     mwidget->setGrid(g);
     showGridAction->setChecked(g);
-    setToolbarSize(settings.value("toolbarSize", QSize(16, 16)).toSize());
+    setToolbarSize(settings.value("toolbarSize", toolbarSize).toSize());
 }
 
 void MainWindow::writeSettings() {
