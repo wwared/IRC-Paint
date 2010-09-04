@@ -41,6 +41,22 @@ MainWidget::~MainWidget() {
         delete p.second;
 }
 
+void MainWidget::clearAscii() {
+    xasc = 26;
+    yasc = 16;
+    background = QImage(xasc, yasc, QImage::Format_RGB32);
+    background.fill((*colors)[0]);
+    foreground = QImage(xasc, yasc, QImage::Format_RGB32);
+    foreground.fill((*colors)[1]);
+    QList<QChar> l;
+    for (int i = 0; i < xasc; ++i) {
+        l << QChar();
+    }
+    for (int i = 0; i < yasc; ++i) {
+        text << l;
+    }
+}
+
 void MainWidget::setGrid(bool g) {
     if (g != showGrid) {
         showGrid = g;

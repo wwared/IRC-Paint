@@ -58,7 +58,6 @@ public:
     int ascWidth() const { return xasc; }
     int ascHeight() const { return yasc; }
     bool gridShown() const { return showGrid; } // whether grid is shown
-    void setGrid(bool g); // show/hide grid
     void setBGImage(const QImage &newImage); // replaces the background image
     void setFGImage(const QImage &newImage); // same for foreground
     QImage getBGImage() const { return background; } // returns a copy of the background
@@ -73,6 +72,10 @@ public:
     enum BrushType { BrushT_Pen, BrushT_Line, BrushT_Rect };
     void setBrush(BrushType b);
     void swapColor(QRgb c1, QRgb c2);
+    void clearAscii();
+
+public slots:
+    void setGrid(bool g); // show/hide grid
 
 protected:
     void mousePressEvent(QMouseEvent *event);

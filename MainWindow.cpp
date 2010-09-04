@@ -8,6 +8,10 @@
 #include <QRegExp>
 #include <QFileInfo>
 #include <QScrollArea>
+#include <QAction>
+#include <QCloseEvent>
+#include <QSettings>
+#include <QFileDialog>
 
 #include <cmath>
 
@@ -30,12 +34,153 @@ MainWindow::MainWindow() {
     colors[13] = qRgb(255,0  ,255);
     colors[14] = qRgb(127,127,127);
     colors[15] = qRgb(210,210,210);
+
     scroll = new QScrollArea(this);
-    scroll->setBackgroundRole(QPalette::Dark);
     mwidget =  new MainWidget(this, &colors);
+
+    newAction = new QAction(tr("&New"), this);
+    newAction->setIcon(QIcon(":/buttons/new.png"));
+    newAction->setShortcut(QKeySequence::New);
+    newAction->setStatusTip(tr("Create a new ascii"));
+    connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
+
+    openAction = new QAction(tr("&Open..."), this);
+    openAction->setIcon(QIcon(":/buttons/open.png"));
+    openAction->setShortcut(QKeySequence::Open);
+    openAction->setStatusTip(tr("Open an existing ascii"));
+    connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
+
+    saveAction = new QAction(tr("&Save"), this);
+    saveAction->setIcon(QIcon(":/buttons/save.png"));
+    saveAction->setShortcut(QKeySequence::Save);
+    saveAction->setStatusTip(tr("Save the ascii"));
+    connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
+
+    saveAsAction = new QAction(tr("Save &As..."), this);
+    saveAsAction->setStatusTip(tr("Save the ascii under a new name"));
+    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
+
+    exitAction = new QAction(tr("E&xit"), this);
+    exitAction->setShortcut(tr("Ctrl+Q"));
+    exitAction->setStatusTip(tr("Exit the application"));
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+
+    aboutAction = new QAction(tr("&About"), this);
+    aboutAction->setStatusTip(tr("Show the About box"));
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
+
+    aboutQtAction = new QAction(tr("About &Qt"), this);
+    aboutQtAction->setStatusTip(tr("Show the Qt library's About box"));
+    connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+    showGridAction = new QAction(tr("&Show Grid"), this);
+    showGridAction->setCheckable(true);
+    showGridAction->setChecked(mwidget->gridShown());
+    showGridAction->setStatusTip(tr("Show or hide the grid"));
+    connect(showGridAction, SIGNAL(toggled(bool)), mwidget, SLOT(setGrid(bool)));
+
+    scroll->setBackgroundRole(QPalette::Dark);
     scroll->setWidget(mwidget);
     setCentralWidget(scroll);
-    QApplication::setWindowIcon(QIcon(":/IRCPaint.png"));
+    readSettings();
+    setWindowIcon(QIcon(":/IRCPaint.png"));
+    setCurrentFile("");
+}
+
+bool MainWindow::okToContinue() {
+    if (isWindowModified()) {
+        int h = QMessageBox::warning(this, tr("IRC Paint"), tr("The document has been modified.\n"
+                                                               "Do you want to save your changes?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        if (h == QMessageBox::Yes) {
+            return save();
+        } else if (h == QMessageBox::Cancel) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void MainWindow::newFile() {
+    if (okToContinue()) {
+        mwidget->clearAscii();
+        setCurrentFile("");
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent* event) {
+    if (okToContinue()) {
+        writeSettings();
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
+
+void MainWindow::setCurrentFile(const QString& fname) {
+    curFile = fname;
+    setWindowModified(false);
+
+    QString shownName = tr("Untitled");
+    if (!curFile.isEmpty()) {
+        shownName = QFileInfo(curFile).fileName();
+    }
+
+    setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(getName()));
+}
+
+void MainWindow::about() {
+    QMessageBox::about(this, tr("About IRC Paint"),
+                       tr("<h1>IRC Paint 0.1</h1>"
+                          "<p>Licensed under the <a href=\"http://sam.zoy.org/wtfpl/\">WTFPL</a>.<br>"
+                          "Source available at <a href=\"http://github.com/Pedrobear/IRC-Paint\">github</a>.</p>"
+                          "<p>Thanks goes to <b>everyone</b>. I love you all.</p>"
+                          "<p>This program is better than:"
+                          "<ul>"
+                          "<li><a href=\"http://www.ircpaint.com/\">ircpaint</a> by <i>taras</i></li>"
+                          "<li><a href=\"http://code.google.com/p/asciipumper/\">Ascii Pumper</a> by <i>Lampiasis</i></li>"
+                          "</ul>"
+                          "</p>"));
+}
+
+void MainWindow::open() {
+    if (okToContinue()) {
+        QString fname = QFileDialog::getOpenFileName(this, tr("Open Ascii"), ".", tr("Ascii files (*.txt);;All files (*)"));
+        if (!fname.isEmpty())
+            importFromTxt(fname);
+    }
+}
+
+bool MainWindow::save() {
+    if (curFile.isEmpty()) {
+        return saveAs();
+    } else {
+        return exportToTxt(curFile);
+    }
+}
+
+bool MainWindow::saveAs() {
+    QString fname = QFileDialog::getSaveFileName(this, tr("Save Ascii"), ".", tr("Ascii files (*.txt);;All files (*)"));
+    if (fname.isEmpty())
+        return false;
+    return exportToTxt(fname);
+}
+
+QString MainWindow::getName() const {
+    return "h";
+}
+
+void MainWindow::readSettings() {
+    QSettings settings("BR Software inc.", "IRC Paint");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    bool g = settings.value("showGrid", true).toBool();
+    mwidget->setGrid(g);
+    showGridAction->setChecked(g);
+}
+
+void MainWindow::writeSettings() {
+    QSettings settings("BR Software inc.", "IRC Paint");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("showGrid", mwidget->gridShown());
 }
 
 bool MainWindow::exportToTxt(const QString& fname) {
@@ -85,6 +230,8 @@ bool MainWindow::exportToTxt(const QString& fname) {
         x = 0;
         ++y;
     }
+    setCurrentFile(fname);
+    setWindowModified(false);
     QApplication::restoreOverrideCursor();
     return true;
 }
@@ -314,6 +461,7 @@ bool MainWindow::importFromTxt(const QString& fname) {
         x = 0;
     }
     mwidget->swapAscii(width, height, text, bg, fg);
+    setCurrentFile(fname);
     QApplication::restoreOverrideCursor();
     return true;
 }
@@ -360,6 +508,8 @@ bool MainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) 
         t << tmp;
     mwidget->swapAscii(irc.width(), irc.height(), t, irc, fg);
     QApplication::restoreOverrideCursor();
+    QString f = fname;
+    setCurrentFile(f.replace(QRegExp("\\..+$"), ".txt"));
     return true;
 }
 

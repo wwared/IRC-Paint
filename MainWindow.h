@@ -6,10 +6,29 @@
 
 class MainWidget;
 class QScrollArea;
+class QAction;
+class QCloseEvent;
 
 class MainWindow : public QMainWindow {
+    Q_OBJECT
 public:
     explicit MainWindow();
+
+private slots:
+    void newFile();
+    void open();
+    bool save();
+    bool saveAs();
+    void about();
+
+protected:
+    void closeEvent(QCloseEvent* event);
+
+private:
+    void writeSettings();
+    void readSettings();
+    bool okToContinue();
+    void setCurrentFile(const QString& fname);
     bool exportToTxt(const QString& fname);
     bool exportToTerminal(const QString& fname);
     bool exportToHtml(const QString& fname);
@@ -21,11 +40,9 @@ public:
     QString rgbToHtml(QRgb c);
     QString ircToTerminal(int i, bool bg);
     void swapIrcColor(int i, QRgb c);
+    QString getName() const;
 
-protected:
-    //void closeEvent(QCloseEvent *);
-
-private:
+    QString curFile;
     struct Lab {
         double l, a, b;
     };
@@ -35,6 +52,15 @@ private:
     QMap<int, QRgb> colors;
     QScrollArea* scroll;
     MainWidget* mwidget;
+
+    QAction* newAction;
+    QAction* openAction;
+    QAction* saveAction;
+    QAction* saveAsAction;
+    QAction* exitAction;
+    QAction* aboutAction;
+    QAction* aboutQtAction;
+    QAction* showGridAction;
 };
 
 #endif // MAINWINDOW_H
