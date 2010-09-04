@@ -3,6 +3,6 @@ IRC Paint
 
 > The gayest thing since sliced butts
 > 
-> -- **slowbro**
+> -- *slowbro*
 
-If you have any questions *too bad*.
+If you have any questions **too bad**.
