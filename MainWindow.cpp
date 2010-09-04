@@ -509,7 +509,7 @@ bool MainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) 
     mwidget->swapAscii(irc.width(), irc.height(), t, irc, fg);
     QApplication::restoreOverrideCursor();
     QString f = fname;
-    setCurrentFile(f.replace(QRegExp("\\..+$"), ".txt"));
+    setCurrentFile(f.replace(QRegExp("\\..+?$"), ".txt"));
     return true;
 }
 
