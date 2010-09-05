@@ -372,7 +372,6 @@ bool MainWindow::exportToTxt(const QString& fname) {
         ++y;
     }
     setCurrentFile(fname);
-    setWindowModified(false);
     QApplication::restoreOverrideCursor();
     return true;
 }
