@@ -6,8 +6,8 @@
 class Brush_Pen : public Brush {
 public:
     Brush_Pen(MainWidget* w) : Brush(w) {}
-    void onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget);
-    void onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget);
+    bool onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget);
+    bool onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget);
 };
 
 #endif // BRUSH_PEN_H

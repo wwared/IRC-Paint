@@ -4,14 +4,14 @@ void Brush::onWidgetPaint(QPaintEvent *, QPainter&) {
     return;
 }
 
-void Brush::onMouseClick(QMouseEvent *, int , int, bool) {
-    return;
+bool Brush::onMouseClick(QMouseEvent *, int , int, bool) {
+    return false;
 }
 
-void Brush::onMouseRelease(QMouseEvent *, int , int, bool) {
-    return;
+bool Brush::onMouseRelease(QMouseEvent *, int , int, bool) {
+    return false;
 }
 
-void Brush::onMouseMove(QMouseEvent *, int , int, bool) {
-    return;
+bool Brush::onMouseMove(QMouseEvent *, int , int, bool) {
+    return false;
 }

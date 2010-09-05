@@ -3,7 +3,7 @@
 
 #include "Brush_Line.h"
 
-void Brush_Line::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget) {
+bool Brush_Line::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget) {
     if (insideWidget) {
         start = event->pos();
         end = event->pos();
@@ -19,17 +19,19 @@ void Brush_Line::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidge
         }
         widget->update(QRect(start,end).adjusted(-3,-3,3,3));
     }
+    return false;
 }
 
-void Brush_Line::onMouseMove(QMouseEvent *event, int , int , bool insideWidget) {
+bool Brush_Line::onMouseMove(QMouseEvent *event, int , int , bool insideWidget) {
     QPoint oldend = end;
     if (insideWidget) {
         end = event->pos();
     }
     widget->update(QRect(start,end).united(QRect(start,oldend)).adjusted(-3,-3,3,3));
+    return false;
 }
 
-void Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWidget) {
+bool Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWidget) {
     drawPreview = false;
     if (insideWidget) {
         end = event->pos();
@@ -45,8 +47,10 @@ void Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWid
         p.drawLine(xstart,ystart,xend,yend);
         p.end();
         widget->update(widget->pixelRect(xstart,ystart).united(widget->pixelRect(xend, yend)).adjusted(-3,-3,3,3));
+        return true;
     } else {
         widget->update(QRect(start,end).adjusted(-3,-3,3,3));
+        return false;
     }
 }
 

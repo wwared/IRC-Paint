@@ -77,6 +77,9 @@ public:
 public slots:
     void setGrid(bool g); // show/hide grid
 
+signals:
+    void somethingChanged(); // emitted when something changes the ascii
+
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

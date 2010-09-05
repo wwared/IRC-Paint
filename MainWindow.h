@@ -28,6 +28,7 @@ private slots:
     bool exportAsTerminal();
     bool exportAsImage();
     void importImage();
+    void asciiModified();
 
 protected:
     void closeEvent(QCloseEvent* event);

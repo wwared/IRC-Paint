@@ -13,9 +13,9 @@ class Brush_Line : public Brush {
     QColor col;
 public:
     Brush_Line(MainWidget* w) : Brush(w), drawPreview(false), drawOnBg(false), xstart(0), ystart(0), xend(0), yend(0) {}
-    void onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget);
-    void onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget);
-    void onMouseRelease(QMouseEvent *event, int x, int y, bool insideWidget);
+    bool onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget);
+    bool onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget);
+    bool onMouseRelease(QMouseEvent *event, int x, int y, bool insideWidget);
     void onWidgetPaint(QPaintEvent *event, QPainter &painter);
 };
 

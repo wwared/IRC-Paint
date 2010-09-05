@@ -103,7 +103,8 @@ void MainWidget::mousePressEvent(QMouseEvent *event) {
     int i = event->pos().x() / xsize;
     int j = event->pos().y() / ysize;
     if (j >= yasc || j < 0 || i >= xasc || i < 0) {
-        current_brush->second->onMouseClick(event, i, j, false);
+        if (current_brush->second->onMouseClick(event, i, j, false))
+            emit somethingChanged();
         return;
     }
     int oldx = lastx;
@@ -112,7 +113,8 @@ void MainWidget::mousePressEvent(QMouseEvent *event) {
     lasty = j;
     update(pixelRect(oldx,oldy));
     if (event->button() == Qt::LeftButton || event->button() == Qt::RightButton) {
-        current_brush->second->onMouseClick(event, i, j, true);
+        if (current_brush->second->onMouseClick(event, i, j, true))
+            emit somethingChanged();
     } else {
         QWidget::mousePressEvent(event);
     }
@@ -122,7 +124,8 @@ void MainWidget::mouseMoveEvent(QMouseEvent *event) {
     int i = event->pos().x() / xsize;
     int j = event->pos().y() / ysize;
     if (j >= yasc || j < 0 || i >= xasc || i < 0) {
-        current_brush->second->onMouseMove(event, i, j, false);
+        if (current_brush->second->onMouseMove(event, i, j, false))
+            emit somethingChanged();
         return;
     }
     int oldx = lastx;
@@ -131,7 +134,8 @@ void MainWidget::mouseMoveEvent(QMouseEvent *event) {
     lasty = j;
     update(pixelRect(oldx,oldy));
     if (event->buttons() & Qt::LeftButton || event->buttons() & Qt::RightButton) {
-        current_brush->second->onMouseMove(event, i, j, true);
+        if (current_brush->second->onMouseMove(event, i, j, true))
+            emit somethingChanged();
     } else {
         QWidget::mouseMoveEvent(event);
     }
@@ -141,13 +145,15 @@ void MainWidget::mouseReleaseEvent(QMouseEvent *event) {
     int i = event->pos().x() / xsize;
     int j = event->pos().y() / ysize;
     if (j >= yasc || j < 0 || i >= xasc || i < 0) {
-        current_brush->second->onMouseRelease(event, i, j, false);
+        if (current_brush->second->onMouseRelease(event, i, j, false))
+            emit somethingChanged();
         return;
     }
     lastx = i;
     lasty = j;
     update(pixelRect(i,j));
-    current_brush->second->onMouseRelease(event, i, j, true);
+    if (current_brush->second->onMouseRelease(event, i, j, true))
+        emit somethingChanged();
 }
 
 void MainWidget::keyPressEvent(QKeyEvent *event) {
@@ -163,9 +169,11 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
             }
         }
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
+        emit somethingChanged();
     } else if (event->key() == Qt::Key_Delete) {
         text[lasty][lastx] = QChar();
         update(pixelRect(lastx, lasty));
+        emit somethingChanged();
     } else if (event->key() == Qt::Key_Backspace) {
         int oldx = lastx;
         int oldy = lasty;
@@ -177,6 +185,7 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
         }
         text[lasty][lastx] = QChar();
         update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
+        emit somethingChanged();
     } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         int oldx = lastx;
         int oldy = lasty;
@@ -392,6 +401,7 @@ void MainWidget::addRows(int place, int n) {
     update();
     updateGeometry();
     adjustSize();
+    emit somethingChanged();
 }
 
 void MainWidget::delRows(int place, int n) {
@@ -429,6 +439,7 @@ void MainWidget::delRows(int place, int n) {
     update();
     updateGeometry();
     adjustSize();
+    emit somethingChanged();
 }
 
 void MainWidget::addColumns(int place, int n) {
@@ -467,6 +478,7 @@ void MainWidget::addColumns(int place, int n) {
     update();
     updateGeometry();
     adjustSize();
+    emit somethingChanged();
 }
 
 void MainWidget::delColumns(int place, int n) {
@@ -506,6 +518,7 @@ void MainWidget::delColumns(int place, int n) {
     update();
     updateGeometry();
     adjustSize();
+    emit somethingChanged();
 }
 
 void MainWidget::setBrush(BrushType b) {

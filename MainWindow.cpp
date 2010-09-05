@@ -40,6 +40,7 @@ MainWindow::MainWindow() : toolbarSize(16, 16) {
 
     scroll = new QScrollArea(this);
     mwidget =  new MainWidget(this, &colors);
+    connect(mwidget, SIGNAL(somethingChanged()), this, SLOT(asciiModified()));
 
     for (int i = 0; i < maxRecentFiles; ++i) {
         recentFileActions[i] = new QAction(this);
@@ -219,6 +220,10 @@ bool MainWindow::saveAs() {
 
 QString MainWindow::getName() const {
     return "h";
+}
+
+void MainWindow::asciiModified() {
+    setWindowModified(true);
 }
 
 void MainWindow::readSettings() {
