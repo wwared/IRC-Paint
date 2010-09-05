@@ -23,6 +23,11 @@ private slots:
     bool saveAs();
     void about();
     void openRecentFile();
+    void clearRecentFiles();
+    bool exportAsHtml();
+    bool exportAsTerminal();
+    bool exportAsImage();
+    void importImage();
 
 protected:
     void closeEvent(QCloseEvent* event);
@@ -64,6 +69,7 @@ private:
     static const unsigned short int maxRecentFiles = 5;
     QAction* recentFileActions[maxRecentFiles];
     QAction* recentFileSeparatorAction;
+    QAction* clearRecentFilesAction;
 
     QAction* newAction;
     QAction* openAction;
@@ -73,10 +79,16 @@ private:
     QAction* aboutAction;
     QAction* aboutQtAction;
     QAction* showGridAction;
+    QAction* exportAsHtmlAction;
+    QAction* exportAsImgAction;
+    QAction* exportAsTermAction;
+    QAction* importImgAction;
     QMenu* fileMenu;
+    QMenu* importMenu;
+    QMenu* exportMenu;
     QMenu* toolsMenu;
     QMenu* helpMenu;
-    QToolBar* fileToolBar;
+    QToolBar* fileToolbar;
 };
 
 #endif // MAINWINDOW_H

@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QInputDialog>
 
 #include <cmath>
 
@@ -45,6 +46,9 @@ MainWindow::MainWindow() : toolbarSize(16, 16) {
         recentFileActions[i]->setVisible(false);
         connect(recentFileActions[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
+
+    clearRecentFilesAction = new QAction(tr("&Clear Recent Files"), this);
+    connect(clearRecentFilesAction, SIGNAL(triggered()), this, SLOT(clearRecentFiles()));
 
     newAction = new QAction(tr("&New"), this);
     newAction->setIcon(QIcon(":/buttons/new.png"));
@@ -79,16 +83,35 @@ MainWindow::MainWindow() : toolbarSize(16, 16) {
     showGridAction->setChecked(mwidget->gridShown());
     connect(showGridAction, SIGNAL(toggled(bool)), mwidget, SLOT(setGrid(bool)));
 
+    exportAsHtmlAction = new QAction(tr("as &HTML"), this);
+    connect(exportAsHtmlAction, SIGNAL(triggered()), this, SLOT(exportAsHtml()));
+
+    exportAsImgAction = new QAction(tr("as &Image"), this);
+    connect(exportAsImgAction, SIGNAL(triggered()), this, SLOT(exportAsImage()));
+
+    exportAsTermAction = new QAction(tr("as ANSI/VT100 &Terminal"), this);
+    connect(exportAsTermAction, SIGNAL(triggered()), this, SLOT(exportAsTerminal()));
+
+    importImgAction = new QAction(tr("from &Image"), this);
+    connect(importImgAction, SIGNAL(triggered()), this, SLOT(importImage()));
+
     fileMenu = menuBar()->addMenu(tr("&File"));
     QList<QAction*> actions;
     actions << newAction << openAction << saveAction << saveAsAction;
     fileMenu->addActions(actions);
+    actions.clear();
     recentFileSeparatorAction = fileMenu->addSeparator();
     for (int i = 0; i < maxRecentFiles; ++i)
         fileMenu->addAction(recentFileActions[i]);
     fileMenu->addSeparator();
-    fileMenu->addAction(exitAction);
+    importMenu = fileMenu->addMenu(tr("&Import"));
+    importMenu->addAction(importImgAction);
+    exportMenu = fileMenu->addMenu(tr("&Export"));
+    actions << exportAsHtmlAction << exportAsImgAction << exportAsTermAction;
+    exportMenu->addActions(actions);
     actions.clear();
+    fileMenu->addSeparator();
+    fileMenu->addAction(exitAction);
 
     toolsMenu = menuBar()->addMenu(tr("&Tools"));
     toolsMenu->addAction(showGridAction);
@@ -100,9 +123,9 @@ MainWindow::MainWindow() : toolbarSize(16, 16) {
     helpMenu->addAction(aboutAction);
     helpMenu->addAction(aboutQtAction);
 
-    fileToolBar = addToolBar(tr("&File Toolbar"));
+    fileToolbar = addToolBar(tr("&File Toolbar"));
     actions << newAction << openAction << saveAction;
-    fileToolBar->addActions(actions);
+    fileToolbar->addActions(actions);
     actions.clear();
 
     scroll->setBackgroundRole(QPalette::Dark);
@@ -219,7 +242,7 @@ void MainWindow::writeSettings() {
 
 void MainWindow::setToolbarSize(const QSize& s) {
     toolbarSize = s;
-    fileToolBar->setIconSize(toolbarSize);
+    fileToolbar->setIconSize(toolbarSize);
 }
 
 void MainWindow::updateRecentFiles() {
@@ -245,6 +268,59 @@ void MainWindow::openRecentFile() {
         QAction* a = qobject_cast<QAction*>(sender());
         if (a)
             importFromTxt(a->data().toString());
+    }
+}
+
+void MainWindow::clearRecentFiles() {
+    recentFiles.clear();
+    updateRecentFiles();
+}
+
+bool MainWindow::exportAsImage() {
+    bool g = (QMessageBox::question(this, tr("IRC Paint"), tr("Do you want the exported image to have a grid?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) ? true : false;
+    QString fname = QFileDialog::getSaveFileName(this, tr("Export as Image"), ".", tr("Portable Network Graphics (*.png);;"
+                                                                                      "Joint Photographic Experts Group (*.jpg *.jpeg);;"
+                                                                                      "Windows Bitmap (*.bmp);;"
+                                                                                      "Portable Pixmap (*.ppm);;"
+                                                                                      "Tagged Image File Format (*.tiff *.tif);;"
+                                                                                      "X11 Bitmap (*.xbm);;"
+                                                                                      "X11 Pixmap (*.xpm)"));
+    if (fname.isEmpty())
+        return false;
+    return exportToImg(fname, g);
+}
+
+bool MainWindow::exportAsHtml() {
+    QString fname = QFileDialog::getSaveFileName(this, tr("Export as HTML"), ".", tr("HTML Files (*.html *.htm);;All files (*)"));
+    if (fname.isEmpty())
+        return false;
+    return exportToHtml(fname);
+}
+
+bool MainWindow::exportAsTerminal() {
+    QString fname = QFileDialog::getSaveFileName(this, tr("Export as ANSI/VT100 Terminal file"), ".", tr("Text Files (*.txt);;All files (*)"));
+    if (fname.isEmpty())
+        return false;
+    return exportToTerminal(fname);
+}
+
+void MainWindow::importImage() {
+    if (okToContinue()) {
+        bool s = (QMessageBox::question(this, tr("IRC Paint"), tr("Use bilinear filtering while scaling image down?\n"
+                                                                  "May result in a smoother image (but not necessarily a smoother ascii)."), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) ? true : false;
+        int w = QInputDialog::getInt(this, tr("IRC Paint"), tr("Maximum width for the resulting ascii (in ascii cells):"), 70, 1);
+        QString fname = QFileDialog::getOpenFileName(this, tr("Import from Image"), ".", tr("Portable Network Graphics (*.png);;"
+                                                                                            "Joint Photographic Experts Group (*.jpg *.jpeg);;"
+                                                                                            "Graphic Interchange Format (*.gif);;"
+                                                                                            "Windows Bitmap (*.bmp);;"
+                                                                                            "Portable Bitmap (*.pbm);;"
+                                                                                            "Portable Graymap (*.pgm);;"
+                                                                                            "Portable Pixmap (*.ppm);;"
+                                                                                            "Tagged Image File Format (*.tiff *.tif);;"
+                                                                                            "X11 Bitmap (*.xbm);;"
+                                                                                            "X11 Pixmap (*.xpm)"));
+        if (!fname.isEmpty())
+            importFromImg(fname, w, s);
     }
 }
 
@@ -534,7 +610,7 @@ bool MainWindow::importFromTxt(const QString& fname) {
 bool MainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) {
     QImage image(fname);
     if (image.isNull()) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1").arg(QFileInfo(fname).fileName()));
+        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot import from file %1").arg(QFileInfo(fname).fileName()));
         return false;
     }
     QApplication::setOverrideCursor(Qt::WaitCursor);
