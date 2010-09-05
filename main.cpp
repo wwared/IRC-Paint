@@ -4,9 +4,9 @@
 
 /* *
    * TODO:
-   * * Actually implement the user interface
+   * * Actually implement the user interface (underway)
    * * Split the image importing code into its own dialog (finer selection of conversion methods and whatnot)
-   * * Implement settings tracking (and a preferences dialog)
+   * * Implement a preferences dialog
    * * Add more brushes (namely selection brush and fill brush)
    * * Backport ascii.pl transformations (and make it work with selection ranges)
    * * Implement undo/redo
