@@ -19,6 +19,7 @@ QSize DockTitle::sizeHint() const {
 
 void DockTitle::paintEvent(QPaintEvent*) {
     QPainter painter(this);
-    painter.fillRect(0, 0, width(), height(), palette().dark().color());
+    painter.setPen(palette().dark().color());
+    painter.drawLine(0, 15, width(), 15);
     painter.drawPixmap((width()/2)-8, 0, icon.pixmap(16, 16));
 }
