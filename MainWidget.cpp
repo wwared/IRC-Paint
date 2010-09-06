@@ -232,13 +232,11 @@ QImage MainWidget::getRenderedImage(bool g) const {
     QPainter painter(&image);
 
     if (g) {
-        painter.setPen(palette().windowText().color());
+        painter.setPen(palette().dark().color());
         for (int i = 0; i <= xasc; ++i)
-            painter.drawLine(xsize * i, 0,
-                                 xsize * i, ysize * yasc);
+            painter.drawLine(xsize * i, 0, xsize * i, ysize * yasc);
         for (int j = 0; j <= yasc; ++j)
-            painter.drawLine(0, ysize * j,
-                                 xsize * xasc, ysize * j);
+            painter.drawLine(0, ysize * j, xsize * xasc, ysize * j);
     }
 
     for (int i = 0; i < xasc; ++i) {
