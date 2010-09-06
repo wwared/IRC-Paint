@@ -8,7 +8,7 @@
 
 Palette::Palette(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), colors(c), bg(1), fg(0) {
     setAttribute(Qt::WA_StaticContents);
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     layout = new QGridLayout(this);
     setLayout(layout);
@@ -18,7 +18,7 @@ Palette::Palette(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), colors(
     connect(picker, SIGNAL(bgColorPicked(int)), swatch, SLOT(bgColorChanged(int)));
     connect(picker, SIGNAL(fgColorPicked(int)), swatch, SLOT(fgColorChanged(int)));
 
-    layout->setColumnMinimumWidth(0, 7);
-    layout->addWidget(picker, 0, 1);
-    layout->addWidget(swatch, 1, 1);
+    layout->addWidget(picker, 0, 0);
+    layout->addWidget(swatch, 1, 0);
+    layout->addWidget(new QWidget(this), 3, 0);
 }

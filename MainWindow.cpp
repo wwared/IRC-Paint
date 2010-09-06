@@ -23,6 +23,8 @@
 #include "Palette.h"
 #include "ColorPicker.h"
 
+#include "DockTitle.h"
+
 MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[0]  = qRgb(255,255,255);
     colors[1]  = qRgb(0  ,0  ,0  );
@@ -47,6 +49,8 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
 
     dock_p = new QDockWidget(tr("Palette"), this);
     dock_p->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    DockTitle* d = new DockTitle(":/icons/color_swatch.png", dock_p);
+    dock_p->setTitleBarWidget(d);
 
     palette = new Palette(dock_p, &colors);
     connect(palette->picker, SIGNAL(bgColorPicked(int)), mwidget, SLOT(bgColorChanged(int)));
@@ -56,6 +60,8 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     addDockWidget(Qt::RightDockWidgetArea, dock_p);
 
     dock_b = new QDockWidget(tr("Brushes"), this);
+    d = new DockTitle(":/icons/paintbrush.png", dock_b);
+    dock_b->setTitleBarWidget(d);
     dock_b->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, dock_b);
 
@@ -69,31 +75,35 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     connect(clearRecentFilesAction, SIGNAL(triggered()), this, SLOT(clearRecentFiles()));
 
     newAction = new QAction(tr("&New"), this);
-    newAction->setIcon(QIcon(":/buttons/new.png"));
+    newAction->setIcon(QIcon(":/icons/page_white.png"));
     newAction->setShortcut(QKeySequence::New);
     connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
 
     openAction = new QAction(tr("&Open..."), this);
-    openAction->setIcon(QIcon(":/buttons/open.png"));
+    openAction->setIcon(QIcon(":/icons/folder.png"));
     openAction->setShortcut(QKeySequence::Open);
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
 
     saveAction = new QAction(tr("&Save"), this);
-    saveAction->setIcon(QIcon(":/buttons/save.png"));
+    saveAction->setIcon(QIcon(":/icons/disk.png"));
     saveAction->setShortcut(QKeySequence::Save);
     connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
 
     saveAsAction = new QAction(tr("Save &As..."), this);
+    saveAsAction->setIcon(QIcon(":/icons/save_as.png"));
     connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
     exitAction = new QAction(tr("E&xit"), this);
+    exitAction->setIcon(QIcon(":/icons/cross.png"));
     exitAction->setShortcut(tr("Ctrl+Q"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
     aboutAction = new QAction(tr("&About"), this);
+    aboutAction->setIcon(QIcon(":/IRCPaint.png"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
     aboutQtAction = new QAction(tr("About &Qt"), this);
+    aboutQtAction->setIcon(QIcon(":/icons/qt.png"));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
     showGridAction = new QAction(tr("&Show Grid"), this);
@@ -102,15 +112,19 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     connect(showGridAction, SIGNAL(toggled(bool)), mwidget, SLOT(setGrid(bool)));
 
     exportAsHtmlAction = new QAction(tr("as &HTML"), this);
+    exportAsHtmlAction->setIcon(QIcon(":/icons/html.png"));
     connect(exportAsHtmlAction, SIGNAL(triggered()), this, SLOT(exportAsHtml()));
 
     exportAsImgAction = new QAction(tr("as &Image"), this);
+    exportAsImgAction->setIcon(QIcon(":/icons/image.png"));
     connect(exportAsImgAction, SIGNAL(triggered()), this, SLOT(exportAsImage()));
 
     exportAsTermAction = new QAction(tr("as ANSI/VT100 &Terminal"), this);
+    exportAsTermAction->setIcon(QIcon(":/icons/application_xp_terminal.png"));
     connect(exportAsTermAction, SIGNAL(triggered()), this, SLOT(exportAsTerminal()));
 
     importImgAction = new QAction(tr("from &Image"), this);
+    importImgAction->setIcon(QIcon(":/icons/image.png"));
     connect(importImgAction, SIGNAL(triggered()), this, SLOT(importImage()));
 
     fileMenu = menuBar()->addMenu(tr("&File"));

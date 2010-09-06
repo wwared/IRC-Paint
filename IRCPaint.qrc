@@ -1,8 +1,16 @@
 <RCC>
     <qresource prefix="/">
         <file>IRCPaint.png</file>
-        <file>buttons/new.png</file>
-        <file>buttons/save.png</file>
-        <file>buttons/open.png</file>
+        <file>icons/cross.png</file>
+        <file>icons/disk.png</file>
+        <file>icons/page_white.png</file>
+        <file>icons/folder.png</file>
+        <file>icons/image.png</file>
+        <file>icons/html.png</file>
+        <file>icons/application_xp_terminal.png</file>
+        <file>icons/qt.png</file>
+        <file>icons/save_as.png</file>
+        <file>icons/color_swatch.png</file>
+        <file>icons/paintbrush.png</file>
     </qresource>
 </RCC>
