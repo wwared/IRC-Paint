@@ -43,7 +43,7 @@ BrushList::BrushList(QWidget *parent) : QWidget(parent) {
     layout->addWidget(bRectBut, 1, 0);
     layout->setRowStretch(99, 1);
 
-    bPenBut->setChecked(true);
+    bPenAct->trigger();
 }
 
 void BrushList::buttonClicked() {
