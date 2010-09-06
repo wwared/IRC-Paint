@@ -14,16 +14,10 @@ class Palette : public QWidget {
 public:
     explicit Palette(QWidget *parent, QMap<int, QRgb>* c);
 
-public slots:
-    void bgColorChanged(int c); // called when a color is picked through ColorPicker
-    void fgColorChanged(int c);
-
 public:
     ColorPicker* picker; // public so other widgets can connect to its signals
 
 private:
-    QString ircToText(int i);
-
     QMap<int, QRgb>* colors;
     QGridLayout* layout;
     ColorSwatch* swatch;
