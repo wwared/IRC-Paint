@@ -23,8 +23,6 @@
 #include "Palette.h"
 #include "ColorPicker.h"
 
-#include "DockTitle.h"
-
 MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[0]  = qRgb(255,255,255);
     colors[1]  = qRgb(0  ,0  ,0  );
@@ -49,8 +47,7 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
 
     dock_p = new QDockWidget(tr("Palette"), this);
     dock_p->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    DockTitle* d = new DockTitle(":/icons/color_swatch.png", dock_p);
-    dock_p->setTitleBarWidget(d);
+    dock_p->setFeatures(QDockWidget::DockWidgetMovable);
 
     palette = new Palette(dock_p, &colors);
     connect(palette->picker, SIGNAL(bgColorPicked(int)), mwidget, SLOT(bgColorChanged(int)));
@@ -60,9 +57,8 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     addDockWidget(Qt::RightDockWidgetArea, dock_p);
 
     dock_b = new QDockWidget(tr("Brushes"), this);
-    d = new DockTitle(":/icons/paintbrush.png", dock_b);
-    dock_b->setTitleBarWidget(d);
     dock_b->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dock_b->setFeatures(QDockWidget::DockWidgetMovable);
     addDockWidget(Qt::RightDockWidgetArea, dock_b);
 
     for (int i = 0; i < maxRecentFiles; ++i) {

@@ -10,7 +10,5 @@
         <file>icons/application_xp_terminal.png</file>
         <file>icons/qt.png</file>
         <file>icons/save_as.png</file>
-        <file>icons/color_swatch.png</file>
-        <file>icons/paintbrush.png</file>
     </qresource>
 </RCC>
