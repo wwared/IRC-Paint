@@ -55,6 +55,10 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     dock_p->setWidget(palette);
     addDockWidget(Qt::RightDockWidgetArea, dock_p);
 
+    dock_b = new QDockWidget(tr("Brushes"), this);
+    dock_b->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::RightDockWidgetArea, dock_b);
+
     for (int i = 0; i < maxRecentFiles; ++i) {
         recentFileActions[i] = new QAction(this);
         recentFileActions[i]->setVisible(false);

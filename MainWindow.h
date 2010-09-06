@@ -6,9 +6,6 @@
 
 class MainWidget;
 class QScrollArea;
-class QAction;
-class QCloseEvent;
-class QMenu;
 class Palette;
 
 class MainWindow : public QMainWindow {
@@ -66,6 +63,7 @@ private:
     QScrollArea* scroll;
     MainWidget* mwidget;
     QDockWidget* dock_p;
+    QDockWidget* dock_b;
 
     Palette* palette;
 
