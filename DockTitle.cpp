@@ -3,6 +3,8 @@
 #include "DockTitle.h"
 
 #include <QString>
+#include <QBrush>
+#include <QLinearGradient>
 
 DockTitle::DockTitle(const QString& fname, QWidget *parent) : QWidget(parent), icon(fname) {
     setAttribute(Qt::WA_StaticContents);
@@ -10,17 +12,20 @@ DockTitle::DockTitle(const QString& fname, QWidget *parent) : QWidget(parent), i
 }
 
 QSize DockTitle::minimumSizeHint() const {
-    return QSize(19,19);
+    return QSize(16,16);
 }
 
 QSize DockTitle::sizeHint() const {
-    return QSize(19,19);
+    return QSize(16,16);
 }
 
 void DockTitle::paintEvent(QPaintEvent*) {
     QPainter painter(this);
-    painter.setPen(palette().dark().color());
-    QDockWidget *dockWidget = qobject_cast<QDockWidget*>(parentWidget());
-    painter.drawRoundedRect(0, 1, dockWidget->isFloating() ? width()-1 : width()-3, 17, 5, 5);
-    painter.drawPixmap((width()/2)-8, 2, icon.pixmap(16, 16));
+    QLinearGradient grad(width()/2, 4, width()/2, 16);
+    grad.setColorAt(0, palette().dark().color());
+    grad.setColorAt(1, palette().window().color());
+    QBrush b(grad);
+    painter.setBrush(b);
+    painter.fillRect(0, 0, width(), height(), grad);
+    painter.drawPixmap((width()/2)-8, 0, icon.pixmap(16, 16));
 }
