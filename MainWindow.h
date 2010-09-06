@@ -61,6 +61,7 @@ private:
 
     QMap<int, QRgb> colors;
     QSize toolbarSize;
+    bool displayTitle;
 
     QScrollArea* scroll;
     MainWidget* mwidget;

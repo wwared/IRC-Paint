@@ -20,7 +20,7 @@
 
 #include "MainWidget.h"
 
-MainWindow::MainWindow() : toolbarSize(16, 16) {
+MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[0]  = qRgb(255,255,255);
     colors[1]  = qRgb(0  ,0  ,0  );
     colors[2]  = qRgb(0  ,0  ,127);
@@ -178,7 +178,11 @@ void MainWindow::setCurrentFile(const QString& fname) {
         updateRecentFiles();
     }
 
-    setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(getName()));
+    if (displayTitle) {
+        setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(getName()));
+    } else {
+        setWindowTitle(tr("%1[*]").arg(shownName));
+    }
 }
 
 void MainWindow::about() {
@@ -191,8 +195,7 @@ void MainWindow::about() {
                           "<ul>"
                           "<li><a href=\"http://www.ircpaint.com/\">ircpaint</a> by <i>taras</i></li>"
                           "<li><a href=\"http://code.google.com/p/asciipumper/\">Ascii Pumper</a> by <i>Lampiasis</i></li>"
-                          "</ul>"
-                          "</p>"));
+                          "</ul></p>"));
 }
 
 void MainWindow::open() {
@@ -219,7 +222,14 @@ bool MainWindow::saveAs() {
 }
 
 QString MainWindow::getName() const {
-    return "h";
+#define H(x, y) case x: return y
+    switch (qrand()%15) {
+        H(0 , "h"); H(1 , "IRC Paint"); H(2 , "Hungry Fungus"); H(3 , "Ascii Pimper"); H(4 , "Calculator");
+        H(5 , "Internet Explorer"); H(6 , "Mozilla Firefox"); H(7 , "Safari"); H(8 , "Google Chrome"); H(9 , "Opera");
+        H(10, "mIRC"); H(11, "XChat"); H(12, "ChatZilla"); H(13, "IceChat"); H(14, "Notepad");
+    default: return "h";
+    }
+#undef H
 }
 
 void MainWindow::readSettings() {
@@ -231,6 +241,7 @@ void MainWindow::readSettings() {
     setToolbarSize(settings.value("toolbarSize", toolbarSize).toSize());
     recentFiles = settings.value("recentFiles").toStringList();
     updateRecentFiles();
+    displayTitle = settings.value("displayTitle", displayTitle).toBool();
 }
 
 void MainWindow::writeSettings() {
@@ -239,6 +250,7 @@ void MainWindow::writeSettings() {
     settings.setValue("showGrid", mwidget->gridShown());
     settings.setValue("toolbarSize", toolbarSize);
     settings.setValue("recentFiles", recentFiles);
+    settings.setValue("displayTitle", displayTitle);
 }
 
 void MainWindow::setToolbarSize(const QSize& s) {
