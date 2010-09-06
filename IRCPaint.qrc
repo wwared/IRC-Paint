@@ -10,5 +10,8 @@
         <file>icons/application_xp_terminal.png</file>
         <file>icons/qt.png</file>
         <file>icons/save_as.png</file>
+        <file>icons/pencil.png</file>
+        <file>icons/line.png</file>
+        <file>icons/rect.png</file>
     </qresource>
 </RCC>

@@ -7,6 +7,7 @@
 class MainWidget;
 class QScrollArea;
 class Palette;
+class BrushList;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -66,6 +67,7 @@ private:
     QDockWidget* dock_b;
 
     Palette* palette;
+    BrushList* blist;
 
     QStringList recentFiles;
     static const unsigned short int maxRecentFiles = 5;

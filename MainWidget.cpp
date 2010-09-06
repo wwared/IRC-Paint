@@ -520,6 +520,10 @@ void MainWidget::delColumns(int place, int n) {
     emit somethingChanged(true);
 }
 
+void MainWidget::brushChanged(BrushType t) {
+    setBrush(t);
+}
+
 void MainWidget::setBrush(BrushType b) {
     typedef std::pair<BrushType, Brush*> brushPair;
     foreach (brushPair p, brushes) {

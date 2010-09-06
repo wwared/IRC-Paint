@@ -1,5 +1,3 @@
-#include <QtGui>
-
 #include "Palette.h"
 #include "ColorSwatch.h"
 #include "ColorPicker.h"
@@ -8,7 +6,6 @@
 
 Palette::Palette(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), colors(c), bg(1), fg(0) {
     setAttribute(Qt::WA_StaticContents);
-    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     layout = new QGridLayout(this);
     setLayout(layout);
@@ -20,5 +17,5 @@ Palette::Palette(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), colors(
 
     layout->addWidget(picker, 0, 0);
     layout->addWidget(swatch, 1, 0);
-    layout->addWidget(new QWidget(this), 3, 0);
+    layout->setRowStretch(2, 1);
 }

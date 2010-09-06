@@ -22,6 +22,7 @@
 #include "MainWidget.h"
 #include "Palette.h"
 #include "ColorPicker.h"
+#include "BrushList.h"
 
 MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[0]  = qRgb(255,255,255);
@@ -45,7 +46,20 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     mwidget =  new MainWidget(this, &colors);
     connect(mwidget, SIGNAL(somethingChanged(bool)), this, SLOT(setWindowModified(bool)));
 
+    dock_b = new QDockWidget(tr("Brushes"), this);
+    dock_b->setObjectName(tr("Brush List"));
+    dock_b->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dock_b->setFeatures(QDockWidget::DockWidgetMovable);
+
+    blist = new BrushList(dock_b);
+    connect(blist, SIGNAL(brushSelected(BrushType)), mwidget, SLOT(brushChanged(BrushType)));
+
+    dock_b->setWidget(blist);
+
+    addDockWidget(Qt::RightDockWidgetArea, dock_b);
+
     dock_p = new QDockWidget(tr("Palette"), this);
+    dock_p->setObjectName(tr("Color Palette"));
     dock_p->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock_p->setFeatures(QDockWidget::DockWidgetMovable);
 
@@ -55,11 +69,6 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
 
     dock_p->setWidget(palette);
     addDockWidget(Qt::RightDockWidgetArea, dock_p);
-
-    dock_b = new QDockWidget(tr("Brushes"), this);
-    dock_b->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    dock_b->setFeatures(QDockWidget::DockWidgetMovable);
-    addDockWidget(Qt::RightDockWidgetArea, dock_b);
 
     for (int i = 0; i < maxRecentFiles; ++i) {
         recentFileActions[i] = new QAction(this);
@@ -152,6 +161,7 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     helpMenu->addAction(aboutQtAction);
 
     fileToolbar = addToolBar(tr("&File Toolbar"));
+    fileToolbar->setObjectName(tr("File Toolbar"));
     actions << newAction << openAction << saveAction;
     fileToolbar->addActions(actions);
     actions.clear();
@@ -191,6 +201,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     } else {
         event->ignore();
     }
+    QMainWindow::closeEvent(event);
 }
 
 void MainWindow::setCurrentFile(const QString& fname) {
@@ -262,6 +273,7 @@ QString MainWindow::getName() const {
 void MainWindow::readSettings() {
     QSettings settings("BR Software inc.", "IRC Paint");
     restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
     bool g = settings.value("showGrid", true).toBool();
     mwidget->setGrid(g);
     showGridAction->setChecked(g);
@@ -274,6 +286,7 @@ void MainWindow::readSettings() {
 void MainWindow::writeSettings() {
     QSettings settings("BR Software inc.", "IRC Paint");
     settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
     settings.setValue("showGrid", mwidget->gridShown());
     settings.setValue("toolbarSize", toolbarSize);
     settings.setValue("recentFiles", recentFiles);
