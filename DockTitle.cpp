@@ -3,7 +3,6 @@
 #include "DockTitle.h"
 
 #include <QString>
-#include <QBrush>
 #include <QLinearGradient>
 
 DockTitle::DockTitle(const QString& fname, QWidget *parent) : QWidget(parent), icon(fname) {
@@ -21,11 +20,9 @@ QSize DockTitle::sizeHint() const {
 
 void DockTitle::paintEvent(QPaintEvent*) {
     QPainter painter(this);
-    QLinearGradient grad(width()/2, 4, width()/2, 16);
+    QLinearGradient grad(width()/2, 4, width()/2, 12);
     grad.setColorAt(0, palette().dark().color());
     grad.setColorAt(1, palette().window().color());
-    QBrush b(grad);
-    painter.setBrush(b);
     painter.fillRect(0, 0, width(), height(), grad);
     painter.drawPixmap((width()/2)-8, 0, icon.pixmap(16, 16));
 }
