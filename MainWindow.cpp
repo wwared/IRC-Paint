@@ -47,10 +47,10 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     mwidget =  new MainWidget(this, &colors);
     connect(mwidget, SIGNAL(somethingChanged(bool)), this, SLOT(setWindowModified(bool)));
 
-    dock_p = new QDockWidget(/*tr("Palette"), */this);
+    dock_p = new QDockWidget(tr("Palette"), this);
     dock_p->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    //DockTitle* d = new DockTitle(":/icons/color_swatch.png", dock_p);
-    //dock_p->setTitleBarWidget(d);
+    DockTitle* d = new DockTitle(":/icons/color_swatch.png", dock_p);
+    dock_p->setTitleBarWidget(d);
 
     palette = new Palette(dock_p, &colors);
     connect(palette->picker, SIGNAL(bgColorPicked(int)), mwidget, SLOT(bgColorChanged(int)));
@@ -59,9 +59,9 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     dock_p->setWidget(palette);
     addDockWidget(Qt::RightDockWidgetArea, dock_p);
 
-    dock_b = new QDockWidget(/*tr("Brushes"), */this);
-    //d = new DockTitle(":/icons/paintbrush.png", dock_b);
-    //dock_b->setTitleBarWidget(d);
+    dock_b = new QDockWidget(tr("Brushes"), this);
+    d = new DockTitle(":/icons/paintbrush.png", dock_b);
+    dock_b->setTitleBarWidget(d);
     dock_b->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, dock_b);
 
