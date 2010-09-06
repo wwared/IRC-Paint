@@ -76,6 +76,8 @@ public:
 
 public slots:
     void setGrid(bool g); // show/hide grid
+    void bgColorChanged(int i); // bg color change
+    void fgColorChanged(int i); // fg color change
 
 signals:
     void somethingChanged(bool); // emitted when something changes the ascii (argument is true)

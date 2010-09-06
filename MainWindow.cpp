@@ -15,10 +15,13 @@
 #include <QMenuBar>
 #include <QToolBar>
 #include <QInputDialog>
+#include <QDockWidget>
 
 #include <cmath>
 
 #include "MainWidget.h"
+#include "Palette.h"
+#include "ColorPicker.h"
 
 MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[0]  = qRgb(255,255,255);
@@ -41,6 +44,16 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     scroll = new QScrollArea(this);
     mwidget =  new MainWidget(this, &colors);
     connect(mwidget, SIGNAL(somethingChanged(bool)), this, SLOT(setWindowModified(bool)));
+
+    dock_p = new QDockWidget(tr("Palette"), this);
+    dock_p->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+    palette = new Palette(dock_p, &colors);
+    connect(palette->picker, SIGNAL(bgColorPicked(int)), mwidget, SLOT(bgColorChanged(int)));
+    connect(palette->picker, SIGNAL(fgColorPicked(int)), mwidget, SLOT(fgColorChanged(int)));
+
+    dock_p->setWidget(palette);
+    addDockWidget(Qt::RightDockWidgetArea, dock_p);
 
     for (int i = 0; i < maxRecentFiles; ++i) {
         recentFileActions[i] = new QAction(this);

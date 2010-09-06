@@ -2,6 +2,8 @@
 
 #include <QtGui/QApplication>
 
+#include <ctime>
+
 /* *
    * TODO:
    * * Actually implement the user interface (underway)
@@ -13,10 +15,12 @@
    * * Implement clipboard
    * * Use signals and slots where applicable for communication between the main window, widgets and brushes
    * * Add further options for html exporting
+   * * Configurable grid color (after preferences dialog is added)
    *
    * */
 
 int main(int argc, char *argv[]) {
+    qsrand(std::time(NULL));
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
