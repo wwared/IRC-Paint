@@ -6,7 +6,6 @@
 
 BrushList::BrushList(QWidget *parent) : QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     bPenAct = new QAction(tr("Pencil"), this);
     bPenAct->setIcon(QIcon(":/icons/pencil.png"));
