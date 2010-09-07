@@ -41,7 +41,7 @@ BrushList::BrushList(QWidget *parent) : QWidget(parent) {
     layout->addWidget(bPenBut, 0, 0);
     layout->addWidget(bLineBut, 0, 1);
     layout->addWidget(bRectBut, 1, 0);
-    layout->setRowStretch(99, 1);
+    layout->setRowStretch(2, 1);
 
     bPenAct->trigger();
 }

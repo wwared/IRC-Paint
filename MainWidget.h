@@ -70,7 +70,6 @@ public:
     void delRows(int place, int n);
     void addColumns(int place, int n); // same but columns
     void delColumns(int place, int n);
-    void setBrush(BrushType b);
     void swapColor(QRgb c1, QRgb c2);
     void clearAscii();
 
@@ -78,7 +77,7 @@ public slots:
     void setGrid(bool g); // show/hide grid
     void bgColorChanged(int i); // bg color change
     void fgColorChanged(int i); // fg color change
-    void brushChanged(BrushType t); // brush change
+    void setBrush(BrushType b); // brush change
 
 signals:
     void somethingChanged(bool); // emitted when something changes the ascii (argument is true)

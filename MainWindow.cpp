@@ -47,19 +47,19 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     connect(mwidget, SIGNAL(somethingChanged(bool)), this, SLOT(setWindowModified(bool)));
 
     dock_b = new QDockWidget(tr("Brushes"), this);
-    dock_b->setObjectName(tr("Brush List"));
+    dock_b->setObjectName("Brush List");
     dock_b->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock_b->setFeatures(QDockWidget::DockWidgetMovable);
 
     blist = new BrushList(dock_b);
-    connect(blist, SIGNAL(brushSelected(BrushType)), mwidget, SLOT(brushChanged(BrushType)));
+    connect(blist, SIGNAL(brushSelected(BrushType)), mwidget, SLOT(setBrush(BrushType)));
 
     dock_b->setWidget(blist);
 
     addDockWidget(Qt::RightDockWidgetArea, dock_b);
 
     dock_p = new QDockWidget(tr("Palette"), this);
-    dock_p->setObjectName(tr("Color Palette"));
+    dock_p->setObjectName("Color Palette");
     dock_p->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock_p->setFeatures(QDockWidget::DockWidgetMovable);
 
@@ -161,7 +161,7 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     helpMenu->addAction(aboutQtAction);
 
     fileToolbar = addToolBar(tr("&File Toolbar"));
-    fileToolbar->setObjectName(tr("File Toolbar"));
+    fileToolbar->setObjectName("File Toolbar");
     actions << newAction << openAction << saveAction;
     fileToolbar->addActions(actions);
     actions.clear();
