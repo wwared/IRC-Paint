@@ -266,9 +266,9 @@ void MainWidget::paintEvent(QPaintEvent *event) {
 
     if (showGrid) {
         painter.setPen(palette().dark().color());
-        for (int i = 0; i <= xasc; ++i)
+        for (int i = xt; i <= xb; ++i)
             painter.drawLine(xsize * i, 0, xsize * i, ysize * yasc);
-        for (int j = 0; j <= yasc; ++j)
+        for (int j = yt; j <= yb; ++j)
             painter.drawLine(0, ysize * j, xsize * xasc, ysize * j);
     }
 
