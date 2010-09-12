@@ -14,5 +14,6 @@
         <file>icons/line.png</file>
         <file>icons/rect.png</file>
         <file>icons/cursor.png</file>
+        <file>icons/paintcan.png</file>
     </qresource>
 </RCC>

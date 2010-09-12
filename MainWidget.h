@@ -13,7 +13,9 @@
 
 // Brushes
 #include "BrushType.h"
+#include "Brush.h"
 #include "Brush_Pen.h"
+#include "Brush_Fill.h"
 #include "Brush_Line.h"
 #include "Brush_Rect.h"
 
@@ -37,7 +39,9 @@ class MainWidget : public QWidget {
     Q_PROPERTY(int yasc READ ascHeight)
 
     // Brushes
+    friend class Brush;
     friend class Brush_Pen;
+    friend class Brush_Fill;
     friend class Brush_Line;
     friend class Brush_Rect;
 

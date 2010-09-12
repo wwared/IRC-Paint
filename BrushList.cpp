@@ -23,6 +23,14 @@ BrushList::BrushList(QWidget *parent) : QWidget(parent) {
     bPenBut = new QToolButton(this);
     bPenBut->setDefaultAction(bPenAct);
 
+    bFillAct = new QAction(tr("Fill"), this);
+    bFillAct->setIcon(QIcon(":/icons/paintcan.png"));
+    bFillAct->setCheckable(true);
+    bFillAct->setData(BrushT_Fill);
+    connect(bFillAct, SIGNAL(triggered()), this, SLOT(buttonClicked()));
+    bFillBut = new QToolButton(this);
+    bFillBut->setDefaultAction(bFillAct);
+
     bLineAct = new QAction(tr("Line"), this);
     bLineAct->setIcon(QIcon(":/icons/line.png"));
     bLineAct->setCheckable(true);
@@ -43,15 +51,17 @@ BrushList::BrushList(QWidget *parent) : QWidget(parent) {
     group->setExclusive(true);
     group->addAction(bCursorAct);
     group->addAction(bPenAct);
+    group->addAction(bFillAct);
     group->addAction(bLineAct);
     group->addAction(bRectAct);
 
     layout = new QGridLayout(this);
     layout->addWidget(bCursorBut, 0, 0);
     layout->addWidget(bPenBut, 0, 1);
-    layout->addWidget(bLineBut, 1, 0);
-    layout->addWidget(bRectBut, 1, 1);
-    layout->setRowStretch(2, 1);
+    layout->addWidget(bFillBut, 1, 0);
+    layout->addWidget(bLineBut, 1, 1);
+    layout->addWidget(bRectBut, 2, 0);
+    layout->setRowStretch(3, 1);
 
     bCursorAct->trigger();
 }

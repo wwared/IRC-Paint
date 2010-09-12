@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     Palette.cpp \
     ColorSwatch.cpp \
     ColorPicker.cpp \
-    BrushList.cpp
+    BrushList.cpp \
+    Brush_Fill.cpp
 
 HEADERS  += \
     MainWidget.h \
@@ -35,7 +36,8 @@ HEADERS  += \
     ColorSwatch.h \
     ColorPicker.h \
     BrushList.h \
-    BrushType.h
+    BrushType.h \
+    Brush_Fill.h
 
 OTHER_FILES += \
     IRCPaint.rc

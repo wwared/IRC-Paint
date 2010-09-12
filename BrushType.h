@@ -1,6 +1,8 @@
 #ifndef BRUSHTYPE_H
 #define BRUSHTYPE_H
 
-enum BrushType { BrushT_Cursor, BrushT_Pen, BrushT_Line, BrushT_Rect };
+enum BrushType { BrushT_Cursor, BrushT_Pen,
+                 BrushT_Fill, BrushT_Line,
+                 BrushT_Rect };
 
 #endif // BRUSHTYPE_H

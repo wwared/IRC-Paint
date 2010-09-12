@@ -25,6 +25,8 @@ private:
     QAction* bCursorAct;
     QToolButton* bPenBut;
     QAction* bPenAct;
+    QToolButton* bFillBut;
+    QAction* bFillAct;
     QToolButton* bLineBut;
     QAction* bLineAct;
     QToolButton* bRectBut;

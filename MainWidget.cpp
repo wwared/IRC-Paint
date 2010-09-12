@@ -10,6 +10,7 @@ MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), c
 
     brushes << std::make_pair(BrushT_Cursor, new Brush(this))
             << std::make_pair(BrushT_Pen, new Brush_Pen(this))
+            << std::make_pair(BrushT_Fill, new Brush_Fill(this))
             << std::make_pair(BrushT_Line, new Brush_Line(this))
             << std::make_pair(BrushT_Rect, new Brush_Rect(this));
     current_brush = brushes.begin();
