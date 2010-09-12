@@ -7,6 +7,14 @@
 BrushList::BrushList(QWidget *parent) : QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
 
+    bCursorAct = new QAction(tr("Cursor"), this);
+    bCursorAct->setIcon(QIcon(":/icons/cursor.png"));
+    bCursorAct->setCheckable(true);
+    bCursorAct->setData(BrushT_Cursor);
+    connect(bCursorAct, SIGNAL(triggered()), this, SLOT(buttonClicked()));
+    bCursorBut = new QToolButton(this);
+    bCursorBut->setDefaultAction(bCursorAct);
+
     bPenAct = new QAction(tr("Pencil"), this);
     bPenAct->setIcon(QIcon(":/icons/pencil.png"));
     bPenAct->setCheckable(true);
@@ -33,17 +41,19 @@ BrushList::BrushList(QWidget *parent) : QWidget(parent) {
 
     group = new QActionGroup(this);
     group->setExclusive(true);
+    group->addAction(bCursorAct);
     group->addAction(bPenAct);
     group->addAction(bLineAct);
     group->addAction(bRectAct);
 
     layout = new QGridLayout(this);
-    layout->addWidget(bPenBut, 0, 0);
-    layout->addWidget(bLineBut, 0, 1);
-    layout->addWidget(bRectBut, 1, 0);
+    layout->addWidget(bCursorBut, 0, 0);
+    layout->addWidget(bPenBut, 0, 1);
+    layout->addWidget(bLineBut, 1, 0);
+    layout->addWidget(bRectBut, 1, 1);
     layout->setRowStretch(2, 1);
 
-    bPenAct->trigger();
+    bCursorAct->trigger();
 }
 
 void BrushList::buttonClicked() {

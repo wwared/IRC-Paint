@@ -21,6 +21,8 @@ signals:
 private:
     QActionGroup* group;
 
+    QToolButton* bCursorBut;
+    QAction* bCursorAct;
     QToolButton* bPenBut;
     QAction* bPenAct;
     QToolButton* bLineBut;

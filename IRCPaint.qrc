@@ -13,5 +13,6 @@
         <file>icons/pencil.png</file>
         <file>icons/line.png</file>
         <file>icons/rect.png</file>
+        <file>icons/cursor.png</file>
     </qresource>
 </RCC>
