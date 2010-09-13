@@ -331,7 +331,8 @@ void MainWindow::clearRecentFiles() {
 
 bool MainWindow::exportAsImage() {
     bool g = (QMessageBox::question(this, tr("IRC Paint"), tr("Do you want the exported image to have a grid?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) ? true : false;
-    QString fname = QFileDialog::getSaveFileName(this, tr("Export as Image"), ".", tr("Portable Network Graphics (*.png);;"
+    QString fname = QFileDialog::getSaveFileName(this, tr("Export as Image"), ".", tr("Image Files (*.png *.jpg *.jpeg *.bmp *.ppm *.tiff *.tif *.xbm *.xpm);;"
+                                                                                      "Portable Network Graphics (*.png);;"
                                                                                       "Joint Photographic Experts Group (*.jpg *.jpeg);;"
                                                                                       "Windows Bitmap (*.bmp);;"
                                                                                       "Portable Pixmap (*.ppm);;"
@@ -362,7 +363,8 @@ void MainWindow::importImage() {
         bool s = (QMessageBox::question(this, tr("IRC Paint"), tr("Use bilinear filtering while scaling image down?\n"
                                                                   "May result in a smoother image (but not necessarily a smoother ascii)."), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) ? true : false;
         int w = QInputDialog::getInt(this, tr("IRC Paint"), tr("Maximum width for the resulting ascii (in ascii cells):"), 70, 1);
-        QString fname = QFileDialog::getOpenFileName(this, tr("Import from Image"), ".", tr("Portable Network Graphics (*.png);;"
+        QString fname = QFileDialog::getOpenFileName(this, tr("Import from Image"), ".", tr("Image Files (*.png *.jpg *.jpeg *.gif *.bmp *.pbm *.pgm *.ppm *.tiff *.tif *.xbm *.xpm);;"
+                                                                                            "Portable Network Graphics (*.png);;"
                                                                                             "Joint Photographic Experts Group (*.jpg *.jpeg);;"
                                                                                             "Graphic Interchange Format (*.gif);;"
                                                                                             "Windows Bitmap (*.bmp);;"
