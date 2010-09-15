@@ -201,7 +201,6 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     } else {
         event->ignore();
     }
-    QMainWindow::closeEvent(event);
 }
 
 void MainWindow::setCurrentFile(const QString& fname) {
