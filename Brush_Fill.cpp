@@ -27,10 +27,8 @@ bool Brush_Fill::onMouseRelease(QMouseEvent* event, int x, int y, bool insideWid
         for (int i = 0; i < pixels.size(); ++i) {
             if (img->pixel(pixels[i]) != from)
                 continue;
-            img->setPixel(pixels[i], to);
-            widget->update(widget->pixelRect(pixels[i]));
             int fy = pixels[i].y();
-            for (int fx = pixels[i].x()+1; fx < img->width() && img->pixel(fx, fy) == from; ++fx) {
+            for (int fx = pixels[i].x(); fx < img->width() && img->pixel(fx, fy) == from; ++fx) {
                 img->setPixel(fx, fy, to);
                 widget->update(widget->pixelRect(fx, fy));
                 if (fy < img->height()-1 && img->pixel(fx, fy+1) == from)
