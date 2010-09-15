@@ -13,7 +13,6 @@ public:
     Brush_Fill(MainWidget* w) : Brush(w) {}
     bool onMouseRelease(QMouseEvent* event, int x, int y, bool insideWidget);
 private:
-    void fill(QImage* img, QRgb from, QRgb to);
     QList<QPoint> pixels;
 };
 

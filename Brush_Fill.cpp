@@ -5,48 +5,48 @@
 
 bool Brush_Fill::onMouseRelease(QMouseEvent* event, int x, int y, bool insideWidget) {
     if (insideWidget) {
+        QRgb from, to;
+        QImage* img;
         if (event->button() == Qt::LeftButton) {
-            QRgb from = widget->background.pixel(x, y);
-            QRgb to = widget->getBGColor().rgb();
-            if (from != to) {
-                pixels << QPoint(x, y);
-                fill(&widget->background, from, to);
-                return true;
-            }
+            img = &widget->background;
+            from = img->pixel(x, y);
+            to = widget->getBGColor().rgb();
+            if (from == to)
+                return false;
+            pixels << QPoint(x, y);
         } else if (event->button() == Qt::RightButton) {
-            QRgb from = widget->foreground.pixel(x, y);
-            QRgb to = widget->getFGColor().rgb();
-            if (from != to) {
-                pixels << QPoint(x, y);
-                fill(&widget->foreground, from, to);
-                return true;
+            img = &widget->foreground;
+            from = img->pixel(x, y);
+            to = widget->getFGColor().rgb();
+            if (from == to)
+                return false;
+            pixels << QPoint(x, y);
+        } else {
+            return false;
+        }
+        for (int i = 0; i < pixels.size(); ++i) {
+            img->setPixel(pixels[i], to);
+            widget->update(widget->pixelRect(pixels[i]));
+            int fy = pixels[i].y();
+            for (int fx = pixels[i].x()+1; fx < img->width() && img->pixel(fx, fy) == from; ++fx) {
+                img->setPixel(fx, fy, to);
+                widget->update(widget->pixelRect(fx, fy));
+                if (fy < img->height()-1 && img->pixel(fx, fy+1) == from)
+                    pixels << QPoint(fx, fy+1);
+                if (fy > 0 && img->pixel(fx, fy-1) == from)
+                    pixels << QPoint(fx, fy-1);
+            }
+            for (int fx = pixels[i].x()-1; fx >= 0 && img->pixel(fx, fy) == from; --fx) {
+                img->setPixel(fx, fy, to);
+                widget->update(widget->pixelRect(fx, fy));
+                if (fy < img->height()-1 && img->pixel(fx, fy+1) == from)
+                    pixels << QPoint(fx, fy+1);
+                if (fy > 0 && img->pixel(fx, fy-1) == from)
+                    pixels << QPoint(fx, fy-1);
             }
         }
+        pixels.clear();
+        return true;
     }
     return false;
-}
-
-void Brush_Fill::fill(QImage* img, QRgb from, QRgb to) {
-    for (int i = 0; i < pixels.size(); ++i) {
-        img->setPixel(pixels[i], to);
-        widget->update(widget->pixelRect(pixels[i]));
-        int y = pixels[i].y();
-        for (int x = pixels[i].x()+1; x < img->width() && img->pixel(x, y) == from; ++x) {
-            img->setPixel(x, y, to);
-            widget->update(widget->pixelRect(x, y));
-            if (y < img->height()-1 && img->pixel(x, y+1) == from)
-                pixels << QPoint(x, y+1);
-            if (y > 0 && img->pixel(x, y-1) == from)
-                pixels << QPoint(x, y-1);
-        }
-        for (int x = pixels[i].x()-1; x >= 0 && img->pixel(x, y) == from; --x) {
-            img->setPixel(x, y, to);
-            widget->update(widget->pixelRect(x, y));
-            if (y < img->height()-1 && img->pixel(x, y+1) == from)
-                pixels << QPoint(x, y+1);
-            if (y > 0 && img->pixel(x, y-1) == from)
-                pixels << QPoint(x, y-1);
-        }
-    }
-    pixels.clear();
 }
