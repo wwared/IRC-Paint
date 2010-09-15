@@ -100,6 +100,7 @@ private:
     void setBGImagePixel(int x, int y);
     void setFGImagePixel(int x, int y);
     QRect pixelRect(int i, int j) const;
+    QRect pixelRect(QPoint p) const;
 
     QMap<int, QRgb>* colors;
     QColor bgColor, fgColor, selColor;

@@ -258,7 +258,11 @@ QImage MainWidget::getRenderedImage(bool g) const {
     return image;
 }
 
+#include <QtDebug>
+
 void MainWidget::paintEvent(QPaintEvent *event) {
+    static int i;
+    qDebug() << ++i;
     int xt = event->region().boundingRect().topLeft().x()/xsize;
     int yt = event->region().boundingRect().topLeft().y()/ysize;
     int xb = event->region().boundingRect().bottomRight().x()/xsize;
@@ -361,6 +365,10 @@ void MainWidget::swapAscii(int w, int h, QList<QList<QChar> > t, QImage b, QImag
 
 inline QRect MainWidget::pixelRect(int i, int j) const {
     return showGrid ? QRect(xsize * i + 1, ysize * j + 1, xsize - 1, ysize - 1) : QRect(xsize * i, ysize * j, xsize, ysize);
+}
+
+QRect MainWidget::pixelRect(QPoint p) const {
+    return pixelRect(p.x(), p.y());
 }
 
 void MainWidget::addRows(int place, int n) {

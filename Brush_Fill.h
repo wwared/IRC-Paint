@@ -3,6 +3,8 @@
 
 #include "Brush.h"
 #include <QRgb>
+#include <QList>
+#include <QPoint>
 
 class QImage;
 
@@ -11,7 +13,8 @@ public:
     Brush_Fill(MainWidget* w) : Brush(w) {}
     bool onMouseRelease(QMouseEvent* event, int x, int y, bool insideWidget);
 private:
-    void fill(QImage* img, int x, int y, QRgb from, QRgb to);
+    void fill(QImage* img, QRgb from, QRgb to);
+    QList<QPoint> pixels;
 };
 
 #endif // BRUSH_FILL_H
