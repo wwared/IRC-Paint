@@ -258,11 +258,7 @@ QImage MainWidget::getRenderedImage(bool g) const {
     return image;
 }
 
-#include <QtDebug>
-
 void MainWidget::paintEvent(QPaintEvent *event) {
-    static int i;
-    qDebug() << ++i;
     int xt = event->region().boundingRect().topLeft().x()/xsize;
     int yt = event->region().boundingRect().topLeft().y()/ysize;
     int xb = event->region().boundingRect().bottomRight().x()/xsize;
