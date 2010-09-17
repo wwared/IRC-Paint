@@ -2,8 +2,8 @@
 
 #include "MainWidget.h"
 
-MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), colors(c), selColor(Qt::yellow), xsize(10), ysize(22), xasc(26),
-                                                                showGrid(true), yasc(16), lastx(0), bgColor((*c)[1]), lasty(0), fgColor((*c)[0]) {
+MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), colors(c), selColor(Qt::yellow), xsize(10), ysize(22), showGrid(true),
+                                                                xasc(26), yasc(16), lastx(0), lasty(0), bgColor((*c)[1]), fgColor((*c)[0]) {
     setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setFocusPolicy(Qt::StrongFocus);
