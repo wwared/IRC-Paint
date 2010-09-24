@@ -497,22 +497,22 @@ bool MainWindow::exportToHtml(const QString& fname) {
     int y = 0;
     QFileInfo f(file);
     out << QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n"
-                   "<html>\n<head>\n<title>%1</title>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n"
-                   "<style type=\"text/css\">\n"
-                   "pre {\n"
-                   "    margin: 0;\n"
-                   "}\n")
+                   "<html>\n"
+                   "    <head>\n"
+                   "        <title>%1</title>\n"
+                   "        <meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n"
+                   "        <style type=\"text/css\">\n"
+                   "            pre { margin: 0; }\n")
             .arg(f.baseName()[0].toUpper()+f.baseName().right(f.baseName().size()-1));
     for (int i = 0; i < 16; ++i) {
-        out << QString(".f%1 {\n"
-                       "    color: %2;\n"
-                       "}\n"
-                       ".b%1 {\n"
-                       "    background-color: %2;\n"
-                       "}\n")
+        out << QString("            .f%1 { color: %2; }\n"
+                       "            .b%1 { background-color: %2; }\n")
                 .arg(i).arg(rgbToHtml(colors[i]));
     }
-    out << "</style>\n</head>\n<body>\n\n<pre>";
+    out <<  "        </style>\n"
+            "    </head>\n"
+            "    <body>\n\n"
+            "<pre>\n";
     foreach(QList<QChar> l, text) {
         QRgb bg = qRgb(0,0,0);
         QRgb fg = qRgb(0,0,0);
@@ -547,7 +547,9 @@ bool MainWindow::exportToHtml(const QString& fname) {
         x = 0;
         ++y;
     }
-    out << "</pre>\n\n</body>\n</html>";
+    out <<  "</pre>\n\n"
+            "    </body>\n"
+            "</html>";
     QApplication::restoreOverrideCursor();
     return true;
 }
