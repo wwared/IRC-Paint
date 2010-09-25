@@ -495,7 +495,7 @@ bool MainWindow::exportToHtml(const QString& fname) {
     QList<QList<QChar> > text = mwidget->getText();
     int x = 0;
     int y = 0;
-    QFileInfo f(file);
+    QString filename = QFileInfo(file).baseName();
     out << QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n"
                    "<html>\n"
                    "    <head>\n"
@@ -503,7 +503,7 @@ bool MainWindow::exportToHtml(const QString& fname) {
                    "        <meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n"
                    "        <style type=\"text/css\">\n"
                    "            pre { margin: 0; }\n")
-            .arg(f.baseName()[0].toUpper()+f.baseName().right(f.baseName().size()-1));
+            .arg(filename[0].toUpper()+filename.right(filename.size()-1));
     for (int i = 0; i < 16; ++i) {
         out << QString("            .f%1 { color: %2; }\n"
                        "            .b%1 { background-color: %2; }\n")
