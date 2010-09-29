@@ -2,6 +2,7 @@
 #include "MainWidget.h"
 
 #include "Brush_Line.h"
+#include "BLine_Action.h"
 
 bool Brush_Line::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget) {
     if (insideWidget) {
@@ -35,18 +36,8 @@ bool Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWid
     drawPreview = false;
     if (insideWidget) {
         end = event->pos();
-        xend = x;
-        yend = y;
-        QPainter p;
-        if (drawOnBg) {
-            p.begin(&widget->background);
-        } else {
-            p.begin(&widget->foreground);
-        }
-        p.setPen(col);
-        p.drawLine(xstart,ystart,xend,yend);
-        p.end();
-        widget->update(widget->pixelRect(xstart,ystart).united(widget->pixelRect(xend, yend)).adjusted(-3,-3,3,3));
+        BLine_Action* act = new BLine_Action(widget, drawOnBg ? &widget->background : &widget->foreground, col, xstart, ystart, x, y);
+        undo->push(act);
         return true;
     } else {
         widget->update(QRect(start,end).adjusted(-3,-3,3,3));

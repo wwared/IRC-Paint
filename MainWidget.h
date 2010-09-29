@@ -19,6 +19,8 @@
 #include "Brush_Line.h"
 #include "Brush_Rect.h"
 
+class QUndoStack;
+
 /* *TODO:
    * Some way of loading files/changing background/foreground images (and initiating a redraw)
    */
@@ -46,7 +48,7 @@ class MainWidget : public QWidget {
     friend class Brush_Rect;
 
 public:
-    explicit MainWidget(QWidget *parent, QMap<int, QRgb>* c);
+    explicit MainWidget(QWidget *parent, QMap<int, QRgb>* c, QUndoStack* u);
     ~MainWidget();
 
     void swapAscii(int w, int h, QList<QList<QChar> > t, QImage b, QImage f);
@@ -76,6 +78,8 @@ public:
     void delColumns(int place, int n);
     void swapColor(QRgb c1, QRgb c2);
     void clearAscii();
+    QRect pixelRect(int i, int j) const;
+    QRect pixelRect(QPoint p) const;
 
 public slots:
     void setGrid(bool g); // show/hide grid
@@ -99,10 +103,9 @@ private:
     void setFGImagePixel(const QPoint &pos);
     void setBGImagePixel(int x, int y);
     void setFGImagePixel(int x, int y);
-    QRect pixelRect(int i, int j) const;
-    QRect pixelRect(QPoint p) const;
 
     QMap<int, QRgb>* colors;
+    QUndoStack* undo;
     QColor bgColor, fgColor, selColor;
     QImage background, foreground;
     int xasc, yasc; // ascii size

@@ -16,6 +16,7 @@
 #include <QToolBar>
 #include <QInputDialog>
 #include <QDockWidget>
+#include <QUndoStack>
 
 #include <cmath>
 
@@ -42,8 +43,10 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[14] = qRgb(127,127,127);
     colors[15] = qRgb(210,210,210);
 
+    undo = new QUndoStack(this);
+
     scroll = new QScrollArea(this);
-    mwidget =  new MainWidget(this, &colors);
+    mwidget =  new MainWidget(this, &colors, undo);
     connect(mwidget, SIGNAL(somethingChanged(bool)), this, SLOT(setWindowModified(bool)));
 
     dock_b = new QDockWidget(tr("Brushes"), this);
@@ -103,6 +106,14 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     exitAction->setShortcut(tr("Ctrl+Q"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
+    undoAction = undo->createUndoAction(this, tr("&Undo"));
+    undoAction->setIcon(QIcon(":/icons/arrow_undo.png"));
+    undoAction->setShortcut(QKeySequence::Undo);
+
+    redoAction = undo->createRedoAction(this, tr("&Redo"));
+    redoAction->setIcon(QIcon(":/icons/arrow_redo.png"));
+    redoAction->setShortcut(QKeySequence::Redo);
+
     aboutAction = new QAction(tr("&About"), this);
     aboutAction->setIcon(QIcon(":/IRCPaint.png"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
@@ -149,6 +160,10 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     actions.clear();
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
+
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(undoAction);
+    editMenu->addAction(redoAction);
 
     toolsMenu = menuBar()->addMenu(tr("&Tools"));
     toolsMenu->addAction(showGridAction);

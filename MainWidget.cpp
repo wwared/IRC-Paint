@@ -1,18 +1,19 @@
 #include <QtGui>
+#include <QUndoStack>
 
 #include "MainWidget.h"
 
-MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c) : QWidget(parent), colors(c), selColor(Qt::yellow), xsize(10), ysize(22), showGrid(true),
-                                                                xasc(26), yasc(16), lastx(0), lasty(0), bgColor((*c)[1]), fgColor((*c)[0]) {
+MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c, QUndoStack* u) : QWidget(parent), colors(c), undo(u), selColor(Qt::yellow), xsize(10), ysize(22),
+                                                                            showGrid(true), xasc(26), yasc(16), lastx(0), lasty(0), bgColor((*c)[1]), fgColor((*c)[0]) {
     setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setFocusPolicy(Qt::StrongFocus);
 
     brushes << std::make_pair(BrushT_Cursor, new Brush(this))
-            << std::make_pair(BrushT_Pen, new Brush_Pen(this))
-            << std::make_pair(BrushT_Fill, new Brush_Fill(this))
-            << std::make_pair(BrushT_Line, new Brush_Line(this))
-            << std::make_pair(BrushT_Rect, new Brush_Rect(this));
+            << std::make_pair(BrushT_Pen, new Brush_Pen(this, undo))
+            << std::make_pair(BrushT_Fill, new Brush_Fill(this, undo))
+            << std::make_pair(BrushT_Line, new Brush_Line(this, undo))
+            << std::make_pair(BrushT_Rect, new Brush_Rect(this, undo));
     current_brush = brushes.begin();
 
     background = QImage(xasc, yasc, QImage::Format_RGB32);

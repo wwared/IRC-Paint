@@ -3,9 +3,12 @@
 
 #include "Brush.h"
 
+class QUndoStack;
+
 class Brush_Pen : public Brush {
+    QUndoStack* undo;
 public:
-    Brush_Pen(MainWidget* w) : Brush(w) {}
+    Brush_Pen(MainWidget* w, QUndoStack* u) : Brush(w), undo(u) {}
     bool onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget);
     bool onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget);
 };

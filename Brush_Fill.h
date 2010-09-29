@@ -6,11 +6,12 @@
 #include <QList>
 #include <QPoint>
 
-class QImage;
+class QUndoStack;
 
 class Brush_Fill : public Brush {
+    QUndoStack* undo;
 public:
-    Brush_Fill(MainWidget* w) : Brush(w) {}
+    Brush_Fill(MainWidget* w, QUndoStack* u) : Brush(w), undo(u) {}
     bool onMouseRelease(QMouseEvent* event, int x, int y, bool insideWidget);
 private:
     QList<QPoint> pixels;

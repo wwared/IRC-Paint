@@ -8,6 +8,7 @@ class MainWidget;
 class QScrollArea;
 class Palette;
 class BrushList;
+class QUndoStack;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -75,11 +76,15 @@ private:
     QAction* recentFileSeparatorAction;
     QAction* clearRecentFilesAction;
 
+    QUndoStack* undo;
+
     QAction* newAction;
     QAction* openAction;
     QAction* saveAction;
     QAction* saveAsAction;
     QAction* exitAction;
+    QAction* undoAction;
+    QAction* redoAction;
     QAction* aboutAction;
     QAction* aboutQtAction;
     QAction* showGridAction;
@@ -90,6 +95,7 @@ private:
     QMenu* fileMenu;
     QMenu* importMenu;
     QMenu* exportMenu;
+    QMenu* editMenu;
     QMenu* toolsMenu;
     QMenu* helpMenu;
     QToolBar* fileToolbar;
