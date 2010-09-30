@@ -2,7 +2,7 @@
 #include "MainWidget.h"
 
 #include "Brush_Line.h"
-#include "BLine_Action.h"
+#include "BLine_Command.h"
 
 bool Brush_Line::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget) {
     if (insideWidget) {
@@ -36,7 +36,7 @@ bool Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWid
     drawPreview = false;
     if (insideWidget) {
         end = event->pos();
-        BLine_Action* act = new BLine_Action(widget, drawOnBg ? &widget->background : &widget->foreground, col, xstart, ystart, x, y);
+        BLine_Command* act = new BLine_Command(widget, drawOnBg ? &widget->background : &widget->foreground, col, xstart, ystart, x, y);
         undo->push(act);
         return true;
     } else {
