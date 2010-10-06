@@ -7,4 +7,4 @@ IRC Paint
 
 If you have any questions **too bad**.
 
-Alternatively, you can click [here](http://pedro.finalboss.org:8080/).
+Alternatively, you can click [here](http://pedro.finalboss.org:8080/irc-paint/).
