@@ -6,3 +6,5 @@ IRC Paint
 > -- *slowbro*
 
 If you have any questions **too bad**.
+
+Alternatively, you can click [here](http://pedro.finalboss.org:8080/).

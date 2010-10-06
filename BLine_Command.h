@@ -6,9 +6,19 @@
 
 #include <QUndoCommand>
 #include <QColor>
+#include <QImage>
 
-class QImage;
 class MainWidget;
+
+/* Note to self:
+ * Due to your own stupidity, this class
+ * keeps a huge rectangle of the changed
+ * area in memory.
+ * This creates a problem when color
+ * changing is added to the preferences.
+ * Either fix that or just clear the undo
+ * stack if the user changes preferences
+ */
 
 class BLine_Command : public QUndoCommand {
     int xstart, ystart, xend, yend;

@@ -76,7 +76,6 @@ public:
     void delRows(int place, int n);
     void addColumns(int place, int n); // same but columns
     void delColumns(int place, int n);
-    void swapColor(QRgb c1, QRgb c2);
     void clearAscii();
     QRect pixelRect(int i, int j) const;
     QRect pixelRect(QPoint p) const;
@@ -86,6 +85,7 @@ public slots:
     void bgColorChanged(int i); // bg color change
     void fgColorChanged(int i); // fg color change
     void setBrush(BrushType b); // brush change
+    void swapColor(QRgb c1, QRgb c2); // swap colors c1 with c2 in the image
 
 signals:
     void somethingChanged(bool); // emitted when something changes the ascii (argument is true)
@@ -96,7 +96,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void paintEvent(QPaintEvent *event);
-
 
 private:
     void setBGImagePixel(const QPoint &pos);

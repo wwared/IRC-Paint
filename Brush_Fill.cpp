@@ -1,7 +1,9 @@
 #include <QtGui>
+
 #include "MainWidget.h"
 
 #include "Brush_Fill.h"
+#include "BFill_Command.h"
 
 bool Brush_Fill::onMouseRelease(QMouseEvent* event, int x, int y, bool insideWidget) {
     if (insideWidget) {
@@ -13,39 +15,16 @@ bool Brush_Fill::onMouseRelease(QMouseEvent* event, int x, int y, bool insideWid
             to = widget->getBGColor().rgb();
             if (from == to)
                 return false;
-            pixels << QPoint(x, y);
         } else if (event->button() == Qt::RightButton) {
             img = &widget->foreground;
             from = img->pixel(x, y);
             to = widget->getFGColor().rgb();
             if (from == to)
                 return false;
-            pixels << QPoint(x, y);
         } else {
             return false;
         }
-        for (int i = 0; i < pixels.size(); ++i) {
-            if (img->pixel(pixels[i]) != from)
-                continue;
-            int fy = pixels[i].y();
-            for (int fx = pixels[i].x(); fx < img->width() && img->pixel(fx, fy) == from; ++fx) {
-                img->setPixel(fx, fy, to);
-                widget->update(widget->pixelRect(fx, fy));
-                if (fy < img->height()-1 && img->pixel(fx, fy+1) == from)
-                    pixels << QPoint(fx, fy+1);
-                if (fy > 0 && img->pixel(fx, fy-1) == from)
-                    pixels << QPoint(fx, fy-1);
-            }
-            for (int fx = pixels[i].x()-1; fx >= 0 && img->pixel(fx, fy) == from; --fx) {
-                img->setPixel(fx, fy, to);
-                widget->update(widget->pixelRect(fx, fy));
-                if (fy < img->height()-1 && img->pixel(fx, fy+1) == from)
-                    pixels << QPoint(fx, fy+1);
-                if (fy > 0 && img->pixel(fx, fy-1) == from)
-                    pixels << QPoint(fx, fy-1);
-            }
-        }
-        pixels.clear();
+        undo->push(new BFill_Command(widget, img, from, to, x, y));
         return true;
     }
     return false;

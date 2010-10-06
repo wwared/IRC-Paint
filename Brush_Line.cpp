@@ -1,4 +1,5 @@
 #include <QtGui>
+
 #include "MainWidget.h"
 
 #include "Brush_Line.h"
@@ -36,8 +37,7 @@ bool Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWid
     drawPreview = false;
     if (insideWidget) {
         end = event->pos();
-        BLine_Command* act = new BLine_Command(widget, drawOnBg ? &widget->background : &widget->foreground, col, xstart, ystart, x, y);
-        undo->push(act);
+        undo->push(new BLine_Command(widget, drawOnBg ? &widget->background : &widget->foreground, col, xstart, ystart, x, y));
         return true;
     } else {
         widget->update(QRect(start,end).adjusted(-3,-3,3,3));

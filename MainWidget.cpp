@@ -298,12 +298,10 @@ void MainWidget::paintEvent(QPaintEvent *event) {
 void MainWidget::swapColor(QRgb c1, QRgb c2) {
     for (int y = 0; y < yasc; ++y) {
         for (int x = 0; x < xasc; ++x) {
-            if (background.pixel(x,y) == c1) {
+            if (background.pixel(x,y) == c1)
                 background.setPixel(x, y, c2);
-            }
-            if (foreground.pixel(x,y) == c1) {
+            if (foreground.pixel(x,y) == c1)
                 foreground.setPixel(x, y, c2);
-            }
         }
     }
     update();
