@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     BrushList.cpp \
     Brush_Fill.cpp \
     BLine_Command.cpp \
-    BFill_Command.cpp
+    BFill_Command.cpp \
+    BRect_Command.cpp
 
 HEADERS  += \
     MainWidget.h \
@@ -41,7 +42,8 @@ HEADERS  += \
     BrushType.h \
     Brush_Fill.h \
     BLine_Command.h \
-    BFill_Command.h
+    BFill_Command.h \
+    BRect_Command.h
 
 OTHER_FILES += \
     IRCPaint.rc
