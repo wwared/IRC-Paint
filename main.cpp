@@ -11,7 +11,6 @@
    * * Implement a preferences dialog
    * * Add more brushes (namely selection brush)
    * * Backport ascii.pl transformations (and make it work with selection ranges)
-   * * Implement undo/redo (underway)
    * * Implement clipboard
    * * Use signals and slots where applicable for communication between the main window, widgets and brushes
    * * Add further options for html exporting

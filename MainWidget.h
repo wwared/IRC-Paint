@@ -46,7 +46,7 @@ class MainWidget : public QWidget {
     friend class Brush_Fill;
     friend class Brush_Line;
     friend class Brush_Rect;
-
+    // Commands
     friend class Text_Command;
 
 public:

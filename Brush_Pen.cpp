@@ -3,12 +3,14 @@
 
 #include "Brush_Pen.h"
 
+#include "BPen_Command.h"
+
 bool Brush_Pen::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget) {
     if (insideWidget) {
         if (event->button() == Qt::LeftButton) {
-            widget->setBGImagePixel(x, y);
+            undo->push(new BPen_Command(widget, &widget->background, id, x, y, widget->getBGColor().rgb()));
         } else if (event->button() == Qt::RightButton) {
-            widget->setFGImagePixel(x, y);
+            undo->push(new BPen_Command(widget, &widget->foreground, id, x, y, widget->getFGColor().rgb()));
         }
         return true;
     }
@@ -18,11 +20,20 @@ bool Brush_Pen::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget
 bool Brush_Pen::onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget) {
     if (insideWidget) {
         if (event->buttons() & Qt::LeftButton) {
-            widget->setBGImagePixel(x, y);
+            undo->push(new BPen_Command(widget, &widget->background, id, x, y, widget->getBGColor().rgb()));
         } else if (event->buttons() & Qt::RightButton) {
-            widget->setFGImagePixel(x, y);
+            undo->push(new BPen_Command(widget, &widget->foreground, id, x, y, widget->getFGColor().rgb()));
         }
         return true;
+    }
+    return false;
+}
+
+bool Brush_Pen::onMouseRelease(QMouseEvent *, int, int, bool) {
+    if (id == 55) {
+        id = 555;
+    } else {
+        id = 55;
     }
     return false;
 }

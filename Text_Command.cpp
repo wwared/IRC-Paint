@@ -1,9 +1,6 @@
 #include "Text_Command.h"
 
-#include <algorithm>
 #include "MainWidget.h"
-
-#include <QtDebug>
 
 Text_Command::Text_Command(MainWidget *w, int x, int y, QChar c) : widget(w) {
     chars << std::make_pair(QPoint(x, y), c);
