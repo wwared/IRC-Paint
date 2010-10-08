@@ -44,6 +44,7 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[15] = qRgb(210,210,210);
 
     undo = new QUndoStack(this);
+    connect(undo, SIGNAL(cleanChanged(bool)), this, SLOT(setCleanState(bool)));
 
     scroll = new QScrollArea(this);
     mwidget =  new MainWidget(this, &colors, undo);
@@ -220,6 +221,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 }
 
 void MainWindow::setCurrentFile(const QString& fname) {
+    undo->setClean();
     curFile = fname;
     setWindowModified(false);
 
@@ -254,8 +256,10 @@ void MainWindow::about() {
 void MainWindow::open() {
     if (okToContinue()) {
         QString fname = QFileDialog::getOpenFileName(this, tr("Open Ascii"), ".", tr("Ascii files (*.txt);;All files (*)"));
-        if (!fname.isEmpty())
+        if (!fname.isEmpty()) {
+            undo->clear();
             importFromTxt(fname);
+        }
     }
 }
 
@@ -313,6 +317,10 @@ void MainWindow::setToolbarSize(const QSize& s) {
     fileToolbar->setIconSize(toolbarSize);
 }
 
+void MainWindow::setCleanState(bool b) {
+    setWindowModified(!b);
+}
+
 void MainWindow::updateRecentFiles() {
     QStringList::iterator it;
     for (it = recentFiles.begin(); it != recentFiles.end(); ++it) {
@@ -334,8 +342,10 @@ void MainWindow::updateRecentFiles() {
 void MainWindow::openRecentFile() {
     if (okToContinue()) {
         QAction* a = qobject_cast<QAction*>(sender());
-        if (a)
+        if (a) {
+            undo->clear();
             importFromTxt(a->data().toString());
+        }
     }
 }
 
