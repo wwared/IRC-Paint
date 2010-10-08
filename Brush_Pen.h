@@ -8,7 +8,6 @@ class BPen_Command;
 
 class Brush_Pen : public Brush {
     QUndoStack* undo;
-    BPen_Command* lastcmd;
     int id;
 public:
     Brush_Pen(MainWidget* w, QUndoStack* u) : Brush(w), undo(u), id(55) {}
