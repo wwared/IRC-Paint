@@ -204,6 +204,7 @@ bool MainWindow::okToContinue() {
 
 void MainWindow::newFile() {
     if (okToContinue()) {
+        undo->clear();
         mwidget->clearAscii();
         setCurrentFile("");
     }

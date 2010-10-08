@@ -3,6 +3,8 @@
 
 #include "MainWidget.h"
 
+#include "Text_Command.h"
+
 MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c, QUndoStack* u) : QWidget(parent), colors(c), undo(u), selColor(Qt::yellow), xsize(10), ysize(22),
                                                                             showGrid(true), xasc(26), yasc(16), lastx(0), lasty(0), bgColor((*c)[1]), fgColor((*c)[0]) {
     setAttribute(Qt::WA_StaticContents);
@@ -165,20 +167,17 @@ void MainWidget::mouseReleaseEvent(QMouseEvent *event) {
 void MainWidget::keyPressEvent(QKeyEvent *event) {
     QChar c = event->text()[0];
     if (c.isPrint()) {
-        text[lasty][lastx] = c;
-        int oldx = lastx;
-        int oldy = lasty;
+        undo->push(new Text_Command(this, lastx, lasty, c));
         if (++lastx >= xasc) {
             lastx = 0;
             if (++lasty >= yasc) {
                 lasty = 0;
             }
         }
-        update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
+        update(pixelRect(lastx, lasty));
         emit somethingChanged(true);
     } else if (event->key() == Qt::Key_Delete) {
-        text[lasty][lastx] = QChar();
-        update(pixelRect(lastx, lasty));
+        undo->push(new Text_Command(this, lastx, lasty, QChar()));
         emit somethingChanged(true);
     } else if (event->key() == Qt::Key_Backspace) {
         int oldx = lastx;
@@ -189,8 +188,8 @@ void MainWidget::keyPressEvent(QKeyEvent *event) {
                 lasty = yasc-1;
             }
         }
-        text[lasty][lastx] = QChar();
-        update(pixelRect(oldx, oldy).united(pixelRect(lastx, lasty)));
+        undo->push(new Text_Command(this, lastx, lasty, QChar()));
+        update(pixelRect(oldx, oldy));
         emit somethingChanged(true);
     } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         int oldx = lastx;

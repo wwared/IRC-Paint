@@ -47,6 +47,8 @@ class MainWidget : public QWidget {
     friend class Brush_Line;
     friend class Brush_Rect;
 
+    friend class Text_Command;
+
 public:
     explicit MainWidget(QWidget *parent, QMap<int, QRgb>* c, QUndoStack* u);
     ~MainWidget();
