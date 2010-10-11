@@ -192,9 +192,13 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
 
 bool MainWindow::okToContinue() {
     if (isWindowModified()) {
-        int h = QMessageBox::warning(this, tr("IRC Paint"), tr("The document has been modified.\n"
-                                                               "Do you want to save your changes?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-        if (h == QMessageBox::Yes) {
+        QMessageBox b;
+        b.setIcon(QMessageBox::Warning);
+        b.setText(tr("The document has been modified."));
+        b.setInformativeText(tr("Do you want to save your changes?"));
+        b.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        int h = b.exec();
+        if (h == QMessageBox::Save) {
             return save();
         } else if (h == QMessageBox::Cancel) {
             return false;
@@ -355,7 +359,11 @@ void MainWindow::clearRecentFiles() {
 }
 
 bool MainWindow::exportAsImage() {
-    bool g = (QMessageBox::question(this, tr("IRC Paint"), tr("Do you want the exported image to have a grid?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) ? true : false;
+    QMessageBox b;
+    b.setIcon(QMessageBox::Question);
+    b.setText(tr("Show grid in the exported image?"));
+    b.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    bool g = (b.exec() == QMessageBox::Yes) ? true : false;
     QString fname = QFileDialog::getSaveFileName(this, tr("Export as Image"), ".", tr("Image Files (*.png *.jpg *.jpeg *.bmp *.ppm *.tiff *.tif *.xbm *.xpm);;"
                                                                                       "Portable Network Graphics (*.png);;"
                                                                                       "Joint Photographic Experts Group (*.jpg *.jpeg);;"
@@ -385,8 +393,12 @@ bool MainWindow::exportAsTerminal() {
 
 void MainWindow::importImage() {
     if (okToContinue()) {
-        bool s = (QMessageBox::question(this, tr("IRC Paint"), tr("Use bilinear filtering while scaling image down?\n"
-                                                                  "May result in a smoother image (but not necessarily a smoother ascii)."), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) ? true : false;
+        QMessageBox b;
+        b.setIcon(QMessageBox::Question);
+        b.setText(tr("Use bilinear filtering?"));
+        b.setInformativeText(tr("May result in a smoother ascii when the image has to be scaled down."));
+        b.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        bool s = (b.exec() == QMessageBox::Yes) ? true : false;
         int w = QInputDialog::getInt(this, tr("IRC Paint"), tr("Maximum width for the resulting ascii (in ascii cells):"), 70, 1);
         QString fname = QFileDialog::getOpenFileName(this, tr("Import from Image"), ".", tr("Image Files (*.png *.jpg *.jpeg *.gif *.bmp *.pbm *.pgm *.ppm *.tiff *.tif *.xbm *.xpm);;"
                                                                                             "Portable Network Graphics (*.png);;"
@@ -407,7 +419,12 @@ void MainWindow::importImage() {
 bool MainWindow::exportToTxt(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
+        QMessageBox b;
+        b.setIcon(QMessageBox::Warning);
+        b.setText(tr("Cannot write file %1").arg(file.fileName()));
+        b.setInformativeText(tr("%2").arg(file.errorString()));
+        b.setStandardButtons(QMessageBox::Ok);
+        b.exec();
         return false;
     }
     QTextStream out(&file);
@@ -459,8 +476,12 @@ bool MainWindow::exportToTxt(const QString& fname) {
 bool MainWindow::exportToImg(const QString& fname, bool grid) {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     if (!mwidget->getRenderedImage(grid).save(fname)) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot save to file %1").arg(QFileInfo(fname).fileName()));
         QApplication::restoreOverrideCursor();
+        QMessageBox b;
+        b.setIcon(QMessageBox::Warning);
+        b.setText(tr("Cannot write file %1").arg(QFileInfo(fname).fileName()));
+        b.setStandardButtons(QMessageBox::Ok);
+        b.exec();
         return false;
     }
     QApplication::restoreOverrideCursor();
@@ -470,7 +491,12 @@ bool MainWindow::exportToImg(const QString& fname, bool grid) {
 bool MainWindow::exportToTerminal(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
+        QMessageBox b;
+        b.setIcon(QMessageBox::Warning);
+        b.setText(tr("Cannot write file %1").arg(file.fileName()));
+        b.setInformativeText(tr("%2").arg(file.errorString()));
+        b.setStandardButtons(QMessageBox::Ok);
+        b.exec();
         return false;
     }
     QTextStream out(&file);
@@ -511,7 +537,12 @@ bool MainWindow::exportToTerminal(const QString& fname) {
 bool MainWindow::exportToHtml(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot write file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
+        QMessageBox b;
+        b.setIcon(QMessageBox::Warning);
+        b.setText(tr("Cannot write file %1").arg(file.fileName()));
+        b.setInformativeText(tr("%2").arg(file.errorString()));
+        b.setStandardButtons(QMessageBox::Ok);
+        b.exec();
         return false;
     }
     QTextStream out(&file);
@@ -583,7 +614,12 @@ bool MainWindow::exportToHtml(const QString& fname) {
 bool MainWindow::importFromTxt(const QString& fname) {
     QFile file(fname);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot open file %1:\n%2").arg(file.fileName()).arg(file.errorString()));
+        QMessageBox b;
+        b.setIcon(QMessageBox::Warning);
+        b.setText(tr("Cannot read file %1").arg(file.fileName()));
+        b.setInformativeText(tr("%2").arg(file.errorString()));
+        b.setStandardButtons(QMessageBox::Ok);
+        b.exec();
         return false;
     }
     static const QRegExp stripCodes("[]|\\d{1,2}(?:,\\d{1,2})?");
@@ -691,7 +727,11 @@ bool MainWindow::importFromTxt(const QString& fname) {
 bool MainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) {
     QImage image(fname);
     if (image.isNull()) {
-        QMessageBox::warning(this, tr("IRC Paint"), tr("Cannot import from file %1").arg(QFileInfo(fname).fileName()));
+        QMessageBox b;
+        b.setIcon(QMessageBox::Warning);
+        b.setText(tr("Cannot import file %1").arg(QFileInfo(fname).fileName()));
+        b.setStandardButtons(QMessageBox::Ok);
+        b.exec();
         return false;
     }
     QApplication::setOverrideCursor(Qt::WaitCursor);
