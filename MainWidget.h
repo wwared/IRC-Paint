@@ -89,6 +89,11 @@ public slots:
     void setBrush(BrushType b); // brush change
     void swapColor(QRgb c1, QRgb c2); // swap colors c1 with c2 in the image
 
+    void addRows(int n = 1) { addRows(yasc, n); }
+    void delRows(int n = 1) { delRows(yasc, n); }
+    void addColumns(int n = 1) { addColumns(xasc, n); }
+    void delColumns(int n = 1) { delColumns(xasc, n); }
+
 signals:
     void somethingChanged(bool); // emitted when something changes the ascii (argument is true)
 

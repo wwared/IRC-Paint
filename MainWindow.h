@@ -93,11 +93,17 @@ private:
     QAction* exportAsImgAction;
     QAction* exportAsTermAction;
     QAction* importImgAction;
+    QAction* addRowAction;
+    QAction* delRowAction;
+    QAction* addColumnAction;
+    QAction* delColumnAction;
     QMenu* fileMenu;
     QMenu* importMenu;
     QMenu* exportMenu;
     QMenu* editMenu;
     QMenu* toolsMenu;
+    QMenu* rowMenu;
+    QMenu* columnMenu;
     QMenu* helpMenu;
     QToolBar* fileToolbar;
 };

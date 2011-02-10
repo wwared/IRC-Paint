@@ -144,6 +144,18 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     importImgAction->setIcon(QIcon(":/icons/image.png"));
     connect(importImgAction, SIGNAL(triggered()), this, SLOT(importImage()));
 
+    addRowAction = new QAction(tr("&Add Row"), this);
+    connect(addRowAction, SIGNAL(triggered()), mwidget, SLOT(addRows()));
+
+    delRowAction = new QAction(tr("&Delete Row"), this);
+    connect(delRowAction, SIGNAL(triggered()), mwidget, SLOT(delRows()));
+
+    addColumnAction = new QAction(tr("&Add Column"), this);
+    connect(addColumnAction, SIGNAL(triggered()), mwidget, SLOT(addColumns()));
+
+    delColumnAction = new QAction(tr("&Delete Column"), this);
+    connect(delColumnAction, SIGNAL(triggered()), mwidget, SLOT(delColumns()));
+
     fileMenu = menuBar()->addMenu(tr("&File"));
     QList<QAction*> actions;
     actions << newAction << openAction << saveAction << saveAsAction;
@@ -169,6 +181,15 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     toolsMenu = menuBar()->addMenu(tr("&Tools"));
     toolsMenu->addAction(showGridAction);
     // preferences go here
+    toolsMenu->addSeparator();
+    rowMenu = toolsMenu->addMenu(tr("&Rows"));
+    actions << addRowAction << delRowAction;
+    rowMenu->addActions(actions);
+    actions.clear();
+    columnMenu = toolsMenu->addMenu(tr("&Columns"));
+    actions << addColumnAction << delColumnAction;
+    columnMenu->addActions(actions);
+    actions.clear();
 
     menuBar()->addSeparator();
 
