@@ -9,6 +9,7 @@ class QScrollArea;
 class Palette;
 class BrushList;
 class QUndoStack;
+class NewDialog;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -78,6 +79,8 @@ private:
     QAction* clearRecentFilesAction;
 
     QUndoStack* undo;
+
+    NewDialog* newDialog;
 
     QAction* newAction;
     QAction* openAction;

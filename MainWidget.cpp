@@ -37,9 +37,9 @@ MainWidget::~MainWidget() {
         delete p.second;
 }
 
-void MainWidget::clearAscii() {
-    xasc = 26;
-    yasc = 16;
+void MainWidget::clearAscii(int x, int y) {
+    xasc = qMax(x, 1);
+    yasc = qMax(y, 1);
     background = QImage(xasc, yasc, QImage::Format_RGB32);
     background.fill((*colors)[0]);
     foreground = QImage(xasc, yasc, QImage::Format_RGB32);

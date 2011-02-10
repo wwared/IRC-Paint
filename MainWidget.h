@@ -78,7 +78,7 @@ public:
     void delRows(int place, int n);
     void addColumns(int place, int n); // same but columns
     void delColumns(int place, int n);
-    void clearAscii();
+    void clearAscii(int x, int y); // clear the ascii into a x by y canvas
     QRect pixelRect(int i, int j) const;
     QRect pixelRect(QPoint p) const;
 

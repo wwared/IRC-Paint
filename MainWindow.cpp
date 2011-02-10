@@ -24,6 +24,7 @@
 #include "Palette.h"
 #include "ColorPicker.h"
 #include "BrushList.h"
+#include "NewDialog.h"
 
 MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     colors[0]  = qRgb(255,255,255);
@@ -156,6 +157,8 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     delColumnAction = new QAction(tr("&Delete Column"), this);
     connect(delColumnAction, SIGNAL(triggered()), mwidget, SLOT(delColumns()));
 
+    newDialog = 0;
+
     fileMenu = menuBar()->addMenu(tr("&File"));
     QList<QAction*> actions;
     actions << newAction << openAction << saveAction << saveAsAction;
@@ -230,9 +233,14 @@ bool MainWindow::okToContinue() {
 
 void MainWindow::newFile() {
     if (okToContinue()) {
-        undo->clear();
-        mwidget->clearAscii();
-        setCurrentFile("");
+        if (!newDialog) {
+            newDialog = new NewDialog(this);
+        }
+        if (newDialog->exec() == QDialog::Accepted) {
+            undo->clear();
+            mwidget->clearAscii(newDialog->getw(), newDialog->geth());
+            setCurrentFile("");
+        }
     }
 }
 

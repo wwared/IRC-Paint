@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     BFill_Command.cpp \
     BRect_Command.cpp \
     Text_Command.cpp \
-    BPen_Command.cpp
+    BPen_Command.cpp \
+    NewDialog.cpp
 
 HEADERS  += \
     MainWidget.h \
@@ -47,7 +48,8 @@ HEADERS  += \
     BFill_Command.h \
     BRect_Command.h \
     Text_Command.h \
-    BPen_Command.h
+    BPen_Command.h \
+    NewDialog.h
 
 OTHER_FILES += \
     IRCPaint.rc
