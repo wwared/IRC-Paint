@@ -33,8 +33,7 @@ NewDialog::NewDialog(QWidget *parent) : QDialog(parent, Qt::WindowTitleHint | Qt
     layout->addWidget(h, 1, 2, 1, 1);
     layout->addWidget(ok, 2, 1, 1, 1);
     layout->addWidget(cancel, 2, 2, 1, 1);
+    layout->setSizeConstraint(QLayout::SetFixedSize);
 
-    setMinimumSize(150, 70);
     setWindowTitle(tr("New file"));
-    setSizeGripEnabled(false);
 }
