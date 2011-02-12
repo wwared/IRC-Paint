@@ -8,6 +8,7 @@
 NewDialog::NewDialog(QWidget *parent) : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint) {
     w = new QSpinBox(this);
     w->setMinimum(1);
+    w->setMaximum(999999);
     w->setValue(26);
 
     QLabel* lw = new QLabel(this);
@@ -15,6 +16,7 @@ NewDialog::NewDialog(QWidget *parent) : QDialog(parent, Qt::WindowTitleHint | Qt
 
     h = new QSpinBox(this);
     h->setMinimum(1);
+    h->setMaximum(999999);
     h->setValue(16);
 
     QLabel* lh = new QLabel(this);
