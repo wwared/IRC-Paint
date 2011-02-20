@@ -129,6 +129,11 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     showGridAction->setChecked(mwidget->gridShown());
     connect(showGridAction, SIGNAL(toggled(bool)), mwidget, SLOT(setGrid(bool)));
 
+    alternatePaintAction = new QAction(tr("&Alternate Paint"), this);
+    alternatePaintAction->setCheckable(true);
+    alternatePaintAction->setChecked(mwidget->paintMode());
+    connect(alternatePaintAction, SIGNAL(toggled(bool)), mwidget, SLOT(setMode(bool)));
+
     exportAsHtmlAction = new QAction(tr("as &HTML"), this);
     exportAsHtmlAction->setIcon(QIcon(":/icons/html.png"));
     connect(exportAsHtmlAction, SIGNAL(triggered()), this, SLOT(exportAsHtml()));
@@ -182,7 +187,9 @@ MainWindow::MainWindow() : toolbarSize(16, 16), displayTitle(true) {
     editMenu->addAction(redoAction);
 
     toolsMenu = menuBar()->addMenu(tr("&Tools"));
-    toolsMenu->addAction(showGridAction);
+    actions << showGridAction << alternatePaintAction;
+    toolsMenu->addActions(actions);
+    actions.clear();
     // preferences go here
     toolsMenu->addSeparator();
     rowMenu = toolsMenu->addMenu(tr("&Rows"));
@@ -659,7 +666,7 @@ bool MainWindow::importFromTxt(const QString& fname) {
     while (!in.atEnd()) {
         QString line = in.readLine();
         lines << line;
-        width = qMax(width, QString(line).replace(stripCodes, "").length());
+        width = qMax(width, line.replace(stripCodes, "").length());
     }
     file.close();
     int height = lines.size();

@@ -37,7 +37,11 @@ bool Brush_Line::onMouseRelease(QMouseEvent *event, int x, int y, bool insideWid
     drawPreview = false;
     if (insideWidget) {
         end = event->pos();
-        undo->push(new BLine_Command(widget, drawOnBg ? &widget->background : &widget->foreground, col, xstart, ystart, x, y));
+        if (drawOnBg) {
+            undo->push(new BLine_Command(widget, &widget->background, widget->alternate ? &widget->foreground : NULL, col, xstart, ystart, x, y));
+        } else {
+            undo->push(new BLine_Command(widget, &widget->foreground, widget->alternate ? &widget->background : NULL, col, xstart, ystart, x, y));
+        }
         return true;
     } else {
         widget->update(QRect(start,end).adjusted(-3,-3,3,3));

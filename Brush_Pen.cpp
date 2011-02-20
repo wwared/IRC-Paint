@@ -8,9 +8,9 @@
 bool Brush_Pen::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget) {
     if (insideWidget) {
         if (event->button() == Qt::LeftButton) {
-            undo->push(new BPen_Command(widget, &widget->background, id, x, y, widget->getBGColor().rgb()));
+            undo->push(new BPen_Command(widget, &widget->background, widget->alternate ? &widget->foreground : NULL, id, x, y, widget->getBGColor().rgb()));
         } else if (event->button() == Qt::RightButton) {
-            undo->push(new BPen_Command(widget, &widget->foreground, id, x, y, widget->getFGColor().rgb()));
+            undo->push(new BPen_Command(widget, &widget->foreground, widget->alternate ? &widget->background : NULL, id, x, y, widget->getFGColor().rgb()));
         }
         return true;
     }
@@ -20,9 +20,9 @@ bool Brush_Pen::onMouseClick(QMouseEvent *event, int x, int y, bool insideWidget
 bool Brush_Pen::onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget) {
     if (insideWidget) {
         if (event->buttons() & Qt::LeftButton) {
-            undo->push(new BPen_Command(widget, &widget->background, id, x, y, widget->getBGColor().rgb()));
+            undo->push(new BPen_Command(widget, &widget->background, widget->alternate ? &widget->foreground : NULL, id, x, y, widget->getBGColor().rgb()));
         } else if (event->buttons() & Qt::RightButton) {
-            undo->push(new BPen_Command(widget, &widget->foreground, id, x, y, widget->getFGColor().rgb()));
+            undo->push(new BPen_Command(widget, &widget->foreground, widget->alternate ? &widget->background : NULL, id, x, y, widget->getFGColor().rgb()));
         }
         return true;
     }
@@ -30,10 +30,6 @@ bool Brush_Pen::onMouseMove(QMouseEvent *event, int x, int y, bool insideWidget)
 }
 
 bool Brush_Pen::onMouseRelease(QMouseEvent *, int, int, bool) {
-    if (id == 55) {
-        id = 555;
-    } else {
-        id = 55;
-    }
+    id = id == 55 ? 555 : 55;
     return false;
 }

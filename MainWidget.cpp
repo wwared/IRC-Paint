@@ -6,7 +6,7 @@
 #include "Text_Command.h"
 
 MainWidget::MainWidget(QWidget *parent, QMap<int, QRgb>* c, QUndoStack* u) : QWidget(parent), colors(c), undo(u), selColor(Qt::yellow), xsize(10), ysize(22),
-                                                                            showGrid(true), xasc(26), yasc(16), lastx(0), lasty(0), bgColor((*c)[1]), fgColor((*c)[0]) {
+                                                                            showGrid(true), alternate(false), xasc(26), yasc(16), lastx(0), lasty(0), bgColor((*c)[1]), fgColor((*c)[0]) {
     setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setFocusPolicy(Qt::StrongFocus);

@@ -67,6 +67,7 @@ public:
     int ascWidth() const { return xasc; }
     int ascHeight() const { return yasc; }
     bool gridShown() const { return showGrid; } // whether grid is shown
+    bool paintMode() const { return alternate; }
     void setBGImage(const QImage &newImage); // replaces the background image
     void setFGImage(const QImage &newImage); // same for foreground
     QImage getBGImage() const { return background; } // returns a copy of the background
@@ -84,6 +85,7 @@ public:
 
 public slots:
     void setGrid(bool g); // show/hide grid
+    void setMode(bool m) { alternate = m; } // change paint mode
     void bgColorChanged(int i); // bg color change
     void fgColorChanged(int i); // fg color change
     void setBrush(BrushType b); // brush change
@@ -118,6 +120,7 @@ private:
     int xsize, ysize; // actual physical pixel size for the rects
     asc_text text; // the ascii text
     bool showGrid; // whether to display 1-pixel black grid between rects
+    bool alternate;
     int lastx, lasty; // last ascii cell selected
     QList<std::pair<BrushType, Brush*> > brushes;
     QList<std::pair<BrushType, Brush*> >::iterator current_brush;

@@ -13,11 +13,13 @@ class BPen_Command : public QUndoCommand {
     int curid;
     MainWidget* widget;
     QImage* img;
+    QImage* other;
 public:
     QList<cell> cells;
     QList<cell> changed;
+    QList<cell> otherChanged; // only used if other is not NULL
 
-    BPen_Command(MainWidget* w, QImage* i, int id, int x, int y, QRgb c);
+    BPen_Command(MainWidget* w, QImage* i, QImage* o, int id, int x, int y, QRgb c);
     void undo();
     void redo();
     bool mergeWith(const QUndoCommand* other);

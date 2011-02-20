@@ -92,6 +92,7 @@ private:
     QAction* aboutAction;
     QAction* aboutQtAction;
     QAction* showGridAction;
+    QAction* alternatePaintAction;
     QAction* exportAsHtmlAction;
     QAction* exportAsImgAction;
     QAction* exportAsTermAction;
