@@ -34,11 +34,12 @@ public:
     {
         if (o) {
             otherChanged = new QImage(o->copy(qMin(xs, xe), qMin(ys, ye), std::abs(xe-xs)+1, std::abs(ye-ys)+1));
+        } else {
+            otherChanged = NULL;
         }
     }
     ~BLine_Command() {
-        if (otherChanged)
-            delete otherChanged;
+        delete otherChanged;
     }
     void undo();
     void redo();
