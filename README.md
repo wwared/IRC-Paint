@@ -5,6 +5,6 @@ IRC Paint
 > 
 > -- *slowbro*
 
-If you have any questions **too bad**.
+You will need QtCore4.dll and QtGui4.dll for this program to run, as well as having the Microsoft Visual C++ 2010 Redistributable installed. These can all either be found at the [homepage](http://paint.irc.so/) or at [github's download section](http://github.com/wwared/IRC-Paint/downloads).
 
-Alternatively, you can click [here](http://paint.irc.so/).
+If you have any questions or suggestions, try going to [irc.chatnets.net #711chan](irc://irc.chatnets.net/711chan)
