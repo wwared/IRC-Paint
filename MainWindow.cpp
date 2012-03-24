@@ -19,6 +19,7 @@
 #include <QUndoStack>
 
 #include <cmath>
+#include <limits>
 
 #include "MainWidget.h"
 #include "Palette.h"
@@ -675,8 +676,8 @@ bool MainWindow::importFromTxt(const QString& fname) {
     QImage fg(width, height, QImage::Format_RGB32);
     fg.fill(colors[1]);
     QList<QList<QChar> > text;
-    QRgb bgCol = colors[0];
-    QRgb fgCol = colors[1];
+    QRgb bgCol;
+    QRgb fgCol;
     int x = 0;
     int y = 0;
     foreach (QString line, lines) {
@@ -811,7 +812,7 @@ bool MainWindow::importFromImg(const QString& fname, int maxWidth, bool smooth) 
 }
 
 QRgb MainWindow::closestColor(const QRgb& c, const QMap<int, Lab>& labColors) {
-    double shortestDistance;
+    double shortestDistance = std::numeric_limits<double>::infinity();
     int index;
     Lab col = rgbToLab(c);
     for (int i = 0; i < 16; ++i) {
