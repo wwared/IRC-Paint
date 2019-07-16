@@ -1,10 +1,8 @@
 IRC Paint
 =========
 
-> The gayest thing since sliced butts
-> 
-> -- *slowbro*
-
-You will need QtCore4.dll and QtGui4.dll for this program to run, as well as having the Microsoft Visual C++ 2010 Redistributable installed. These can all either be found at the [homepage](http://paint.irc.so/) or at [github's download section](http://github.com/wwared/IRC-Paint/downloads).
-
-If you have any questions or suggestions, try going to [irc.chatnets.net #711chan](irc://irc.chatnets.net/711chan)
+This project has been abandoned for an undeterminate amount of time, and this
+repository is left here for archival purposes only. I recommend using
+[img2term](https://www.github.com/wwared/img2term) and any actual pixel art
+editor (such as [aseprite](https://www.aseprite.org) with an IRC palette) for
+modern IRC art work.
